@@ -1,14 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_project/main.dart';
+import 'package:flutter_project/model/request.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
  String? mac_id="4988b924cfe11070";
 // String? url;
 
 class ApiService{
+  APIRequestBuilder req =APIRequestBuilder();
+  String? storedUrl;
  String url = '';
+      var loca;
+
  Map<String, dynamic> data = {};
  Map<String, dynamic> data2 = {};
+ Map<String, dynamic> responseData= {};
 
   Future<void> postData() async {
     // Define the endpoint URL
@@ -81,7 +89,7 @@ Future<bool> doesUrlExist() async {
 
    Future<void> sendData() async {
   //   // Define the endpoint URL
-    String? storedUrl = await getUrlFromSharedPreferences();
+     storedUrl = await getUrlFromSharedPreferences();
     String link = 'http://${storedUrl}/api/Sales/CommonExcuteDS';
 
     // Define the JSON data to be sent in the request
@@ -219,20 +227,12 @@ Future<bool> doesUrlExist() async {
         },
         body: requestBody1,
       );
-    //   HttpClient client = HttpClient();
-    // client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-
-    // // Make the POST request
-    // HttpClientRequest request = await client.postUrl(Uri.parse(link));
-    // request.headers.set('Content-Type', 'application/json; charset=UTF-8');
-    // request.write(requestBody1);
-    // HttpClientResponse response1 = await request.close();
+   
 
 
       // Check if the request was successful (status code 200)
       if (response1.statusCode == 200) {
-        // Request successful, print the response body
-        //String responseBody = await response1.transform(utf8.decoder).join();
+        
           data2 = jsonDecode(response1.body);
         //String? returnMsgImei = data2['CommonResult']['Table'][0]['ReturnMSGIMEI'];
 //print(returnMsgImei);
@@ -252,5 +252,152 @@ Future<bool> doesUrlExist() async {
 
 
     }
+    Future<void> loadCurrentSalesData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '2',
+      '',
+      '${date}',
+      '',
+      '${loca}',
+      '',
+      '${date}',
+      '',
+      '',
+      '',
+      imei,
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
 
+    // Encoding the JSON data using jsonEncode
+    var requestBody = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+      // Parsing the response JSON
+       responseData = jsonDecode(response.body);
+      print('current sale:${responseData}');
+      String nam=responseData['CommonResult']['Table'][0]['NetSales'];
+      print(nam);
+      // Handle the response data here
+    } else {
+      // Handle error cases
+      print('Error: ${response.statusCode}');
+      // Optionally handle different error status codes
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Exception:n $e');
+  }
+    }
+
+    Future<void> loadLocations(imei,date) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    var response = await http.post(
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: jsonEncode(
+        req.RequestJSON(
+          'sp_Android_Common_API_Sales_App',
+          '5',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          imei,
+          '',
+          '',
+          '',
+          '',
+          '',
+        ),
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      List<dynamic> names = [];
+      json['CommonResult']['Table'].forEach((element) {
+        names.add(element);
+      });
+      names.forEach((element) {
+   loca = element['Loca']; // Accessing 'Loca' property using bracket notation
+  // Do something with loca
+});
+
+// Alternatively, using for-in loop
+for (var element in names) {
+   loca = element['Loca']; // Accessing 'Loca' property using bracket notation
+  // Do something with loca
+}
+      //var name =jsonDecode();
+       print(loca);
+      // setState(() {
+      //   names = names;
+      // });
+      //loadCurrentSalesData(date:date,loca:loca,imei:imei);
+      //getNotificationCount();
+    } else {
+      // Handle error cases
+      print('Error: ${response.statusCode}');
+      // Optionally handle different error status codes
+      //showAlert();
+    }
+  } catch (e) {
+    // Handle exceptions
+    print('Exception: $e');
+    showAlert();
+  }
+}
+
+void showAlert() {
+  showDialog(
+    context: navigatorKey.currentState!.context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Message 5'),
+        content: Text(
+            'The server encountered a temporary error and could not complete your request.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              //loadLocations()
+              },
+            child: Text('Try Again'),
+          ),
+        ],
+      );
+    },
+  );
+}
 }

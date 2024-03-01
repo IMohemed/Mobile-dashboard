@@ -1,4 +1,5 @@
-import 'package:device_info/device_info.dart';
+//import 'package:device_info/device_info.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/db_con/local_db.dart';
@@ -23,7 +24,9 @@ class _LoginState extends State<Login> {
     // TODO: implement initState
     super.initState();
     //_getImei();
+    
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -138,19 +141,6 @@ class _LoginState extends State<Login> {
   print('Received MAC: $mac');
 }
 
-Future<void> _getImei() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    if (Theme.of(context).platform == TargetPlatform.android) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        imei = androidInfo.androidId; // Using androidId as an example, you might need to request permission to access the IMEI number.
-      });
-    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
-      // iOS doesn't allow access to IMEI number.
-      setState(() {
-        imei = 'IMEI not available on iOS';
-      });
-    }
-  }
+
 
 }

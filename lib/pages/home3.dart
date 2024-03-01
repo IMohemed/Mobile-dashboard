@@ -2,9 +2,13 @@
 import 'dart:ffi';
 
 //import 'package:fl_chart/fl_chart.dart';
+//import 'package:device_imei/device_imei.dart';
+import 'package:device_info/device_info.dart';
+//import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/pages/home2.dart';
+import 'package:flutter_project/pages/netsales.dart';
 import 'package:flutter_project/pages/report.dart';
 import 'package:flutter_project/pages/sales.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +25,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String mei ='';
    ApiService api = ApiService();
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -30,7 +35,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
-  
+ String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
   bool _isCalendarVisible = false;
   double _number = 0,_number1=0;
   Map<String,double> datamap  = {
@@ -46,7 +51,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   ];
   @override
   void initState() {
+    _getImei();
+    //get();
     super.initState();
+    
+    DateTime date =DateTime.now() ;
+    //await api.loadCurrentSalesData(date1);
     
     _controller = AnimationController(
       vsync: this,
@@ -75,7 +85,32 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     _controller.forward();
   }
   DateTime today = DateTime.now();
+  Map<String,dynamic> data1 ={};
+  Map<String,dynamic> res ={};
+  String? net,loc,cr,cs,ds,cds,db; 
+   
+  // get()async{
+  //  await api.loadCurrentSalesData();
+  //  data1= api.responseData;
+  //  print(data1['CommonResult']['Table'][0]['NetSales'].toString());
+  // }
 
+  Future<void> get() async {
+  try {
+    await api.loadCurrentSalesData();
+    res = api.responseData;
+    if( res!= null && res.containsKey('CommonResult') && res['CommonResult'].containsKey('Table')) {
+      var netSales = res['CommonResult']['Table'][0]['NetSales'];
+      print(netSales != null ? netSales.toString() : 'NetSales not found');
+    } else {
+      print('Data structure does not match expected format');
+    }
+  } catch (e) {
+    print('Error in get(): $e');
+    // Handle exceptions
+  }
+}
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,7 +226,9 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                       
+                        //DeviceImei deviceImei=DeviceImei();
+                       _getImei();
+                      
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){
     
@@ -376,6 +413,26 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                   child: LineChartSample2()
                                   //),
                                 ),
+                              ),
+                              SizedBox(height: 26,),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                 child: Column(
+                //mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Net sales: ${net}'),
+                  Text('Cas Refund: ${cr}'),
+                  Text('Cash Sales: ${cs}'),
+                  Text('Discount: ${ds}'),
+                  Text('Credit sales: ${cds}'),
+                  Text('Credit Refund: ${cds}'),
+                  Text('DB Name: ${db}'),
+                ],
+              ),
+                                  //),
+                                ),
                               ), 
                               //Padding(padding:EdgeInsets.all(8),
                              //Container(
@@ -485,6 +542,42 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
       ],
     );
+  }
+  Future<void> _getImei( ) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    //if (Theme.of(context).platform == TargetPlatform.android) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+     // setState(() {
+        mei = androidInfo.androidId; // Using androidId as an example, you might need to request permission to access the IMEI number.
+        print(mei);
+        await api.loadLocations(mei,date);
+        loc=api.loca;
+        await api.loadCurrentSalesData(date:date,loca:loc,imei:mei);
+        setState(() {
+            
+          res = api.responseData;
+          print('res:${res}');
+          if(res != null && res.containsKey('CommonResult')) {
+  var commonResult = res['CommonResult'];
+  if (commonResult.containsKey('Table')) {
+     net = res['CommonResult']['Table'][0]['NetSales'];
+     cr = res['CommonResult']['Table'][0]['CashRefund'];
+     cs = res['CommonResult']['Table'][0]['CashSales'];
+     ds = res['CommonResult']['Table'][0]['Discount'];
+     cds = res['CommonResult']['Table'][0]['CreditSales'];
+     db = res['CommonResult']['Table'][0]['DBNAME'];
+  // print(data1['CommonResult']['Table'][0]['NetSales'].toString());
+    // Now you can safely access properties on the 'Table' object
+  } else {
+    print('Error: Table property not found');
+  }
+} else {
+  print('Error: CommonResult property not found');
+}
+        });
+        print('net:${net}');
+      //});
+  //}
   }
 
 }
