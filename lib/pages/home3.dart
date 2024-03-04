@@ -7,6 +7,7 @@ import 'package:device_info/device_info.dart';
 //import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
+import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/netsales.dart';
 import 'package:flutter_project/pages/report.dart';
@@ -30,6 +31,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   late AnimationController _controller;
   late Animation<double> _animation;
   late Animation<double> _animation1;
+  List<CurrentSale> currentSales = [];
   DateTime now =DateTime.now() ;
   int date = DateTime.now().day;
 int year = DateTime.now().year;
@@ -226,8 +228,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                        //DeviceImei deviceImei=DeviceImei();
-                       _getImei();
+                        await api.loadPieChartData(date: date,loca: 4,imei: mei);
                       
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){
@@ -431,6 +432,20 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   Text('DB Name: ${db}'),
                 ],
               ),
+    //           child:ListView.builder(
+    //   itemCount: currentSales.length,
+    //   itemBuilder: (context, index) {
+    //     return ListTile(
+    //       Text('Net sales: ${net}'),
+    //               Text('Cas Refund: ${cr}'),
+    //               Text('Cash Sales: ${cs}'),
+    //               Text('Discount: ${ds}'),
+    //               Text('Credit sales: ${cds}'),
+    //               Text('Credit Refund: ${cds}'),
+    //               Text('DB Name: ${db}'),
+    //     );
+    //   },
+    // );
                                   //),
                                 ),
                               ), 
@@ -547,8 +562,9 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     //if (Theme.of(context).platform == TargetPlatform.android) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-     // setState(() {
-        mei = androidInfo.androidId; // Using androidId as an example, you might need to request permission to access the IMEI number.
+      setState(() {
+        mei = androidInfo.androidId; 
+        });// Using androidId as an example, you might need to request permission to access the IMEI number.
         print(mei);
         await api.loadLocations(mei,date);
         loc=api.loca;
