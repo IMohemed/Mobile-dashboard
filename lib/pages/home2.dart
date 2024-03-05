@@ -1,9 +1,13 @@
 //import 'package:device_info/device_info.dart';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/db_con/local_db.dart';
+import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home3.dart';
+import 'package:flutter_project/pages/locs.dart';
+import 'package:intl/intl.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -15,6 +19,10 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   ApiService api = ApiService();
   localDB local=localDB();
+  String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  String mei ='';
+  String? loc;
+  List<CurrentSale> current = [];
   String imei = "";
   bool _rememberMe = false;
   Map<String,dynamic> data1 ={};
@@ -89,12 +97,13 @@ class _LoginState extends State<Login> {
                     if(password.text == "8080" )
                     {
                       if(idExists)
-                      ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Id exists'),
-                  duration: Duration(seconds: 2), // Duration for which the snackbar is visible
-                ),
-              );
+              //         ScaffoldMessenger.of(context).showSnackBar(
+              //   SnackBar(
+              //     content: Text('Id exists'),
+              //     duration: Duration(seconds: 2), // Duration for which the snackbar is visible
+              //   ),
+              // )
+              print("object");
                      //print(imei);
                      else{
                      await api.postData();
@@ -110,8 +119,11 @@ class _LoginState extends State<Login> {
                       await api.sendData();
                       data3 = api.data2;
                       if(data3['CommonResult']['Table'][0]['ReturnMSGIMEI'] == "T")
-                      Navigator.push(context,MaterialPageRoute(builder: (context) => Dashboard()),); 
-                       //}
+                      {
+                        _getImei(); 
+                        //Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo()),);
+
+                       }
                       //else {}
                      }
                     print(data1);
@@ -134,6 +146,28 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+  Future<void> _getImei( ) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    //if (Theme.of(context).platform == TargetPlatform.android) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      setState(() {
+        mei = androidInfo.androidId; 
+        });// Using androidId as an example, you might need to request permission to access the IMEI number.
+        print(mei);
+        await api.loadLocations(mei,date1);
+        loc=api.loca;
+        await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
+        setState(() {
+            
+          current = api.currentSales;
+          print('cur:${current}');
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,)),);
+          
+        });
+        //print('net:${net}');
+      //});
+  //}
   }
   void processUrlAndMac(String url, String mac) {
   // Use the url and mac as needed

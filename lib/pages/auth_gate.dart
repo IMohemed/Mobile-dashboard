@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
+import 'package:flutter_project/pages/locs.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
@@ -23,7 +24,7 @@ class AuthGate extends StatelessWidget {
       // If the future has completed successfully
       final idExists = snapshot.data!;
       if (idExists) {
-        return Dashboard();
+        return HorizontalSlidingDemo();
       } else {
         return Login();
       }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/model/request.dart';
+import 'package:flutter_project/pages/home3.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
  String? mac_id="4988b924cfe11070";
@@ -315,29 +316,29 @@ Future<bool> doesUrlExist() async {
        responseData = jsonDecode(response.body);
       print('current sale:${responseData}');
 
-//       if (responseData['CommonResult']['Table'] != null) {
-//   (responseData['CommonResult']['Table'] as List).forEach((element) {
-//     CurrentSale sale = CurrentSale(
-//       netsale: element['NetSales'],
-//       cashsales: element['CashSales'],
-//       noncashsales: element['CreditSales'],
-//       customercount: element['NoOfCustomer'],
-//       avgbill: element['AVGBill'],
-//       cashrefund: element['CashRefund'],
-//       cashout: element['CashOut'],
-//       creditsales: element['CreditSales'],
-//       customercredit: element['CustomerCredit'],
-//     );
-//     currentSales.add(sale);
-//     updateNetsaleValue(element['NetSales']);
-//       updateCurrentSales(currentSales);
-//   });
-// }     
+      if (responseData['CommonResult']['Table'] != null) {
+  (responseData['CommonResult']['Table'] as List).forEach((element) {
+    CurrentSale sale = CurrentSale(
+      netsale: element['NetSales'],
+      cashsales: element['CashSales'],
+      noncashsales: element['CreditSales'],
+      customercount: element['NoOfCustomer'],
+      avgbill: element['AVGBill'],
+      cashrefund: element['CashRefund'],
+      cashout: element['CashOut'],
+      creditsales: element['CreditSales'],
+      customercredit: element['CustomerCredit'],
+    );
+    currentSales.add(sale);
+    updateNetsaleValue(element['NetSales']);
+      updateCurrentSales(currentSales);
+  });
+}     
       
 
       String nam=responseData['CommonResult']['Table'][0]['NetSales'];
       print(nam);
-      loadPieChartData(date: date,loca: loca,imei: imei);
+      loadPieChartData(date: 4,loca: loca,imei: imei);
       // Handle the response data here
     } else {
       // Handle error cases
@@ -426,11 +427,11 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '4',
       '',
-      '${date}',
+      '04/03/2024',
       '',
       '${loca}',
       '',
-      '${date}',
+      '04/03/2024',
       '',
       '',
       '',
@@ -460,7 +461,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       // Parsing the response JSON
        responseData = jsonDecode(response.body);
       print('pie sale:${responseData}');
-      
+      print(date+loca);
 //      const List<Map<String, dynamic>> piedata=[];
 //    List<Map<String, dynamic>> piedatalist=[];
 //    int i = 0;
@@ -540,7 +541,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
     }}
    catch (e) {
     // Handle exceptions
-    print('Exception:n $e');
+    print('Exception:a $e');
   }
     }
 
@@ -560,8 +561,9 @@ void showAlert(imei,date) {
           ),
           TextButton(
             onPressed: () {
-              loadLocations(imei,date);
-              onPressed: () => Navigator.of(context).pop();
+              ///loadLocations(imei,date);
+              Dashboard();
+               Navigator.of(context).pop();
               },
             child: Text('Try Again'),
           ),

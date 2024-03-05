@@ -16,15 +16,15 @@ import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class Dashboard extends StatefulWidget {
-  List<CurrentSale>? current;
-   Dashboard({super.key,this.current});
+class Dashboard2 extends StatefulWidget {
+  
+  const Dashboard2({super.key});
 
   @override
-  State<Dashboard> createState() => _DashboardState();
+  State<Dashboard2> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin{
+class _DashboardState extends State<Dashboard2> with SingleTickerProviderStateMixin{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   String mei ='';
    ApiService api = ApiService();
@@ -51,7 +51,6 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     Color.fromARGB(255, 90, 174, 243),
 
   ];
-  //late MyInheritedWidget _inheritedWidget;
   @override
   void initState() {
     //_getImei();
@@ -61,50 +60,134 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     DateTime date =DateTime.now() ;
     //await api.loadCurrentSalesData(date1);
     
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 1),
-    );
+    // _controller = AnimationController(
+    //   vsync: this,
+    //   duration: Duration(seconds: 1),
+    // );
 
-    _animation = Tween<double>(
-      begin: 0,
-      end: 100, // Change this to the desired final number
-    ).animate(_controller)
-      ..addListener(() {
-        setState(() {
-          _number = _animation.value;
-        });
-      });
-      _animation1 = Tween<double>(
-      begin: 0,
-      end: 1000, // Change this to the desired final number
-    ).animate(_controller)
-      ..addListener(() {
-        setState(() {
-          _number1 = _animation1.value;
-        });
-      });
+    // _animation = Tween<double>(
+    //   begin: 0,
+    //   end: 100, // Change this to the desired final number
+    // ).animate(_controller)
+    //   ..addListener(() {
+    //     setState(() {
+    //       _number = _animation.value;
+    //     });
+    //   });
+    //   _animation1 = Tween<double>(
+    //   begin: 0,
+    //   end: 1000, // Change this to the desired final number
+    // ).animate(_controller)
+    //   ..addListener(() {
+    //     setState(() {
+    //       _number1 = _animation1.value;
+    //     });
+    //   });
 
-    _controller.forward();
-  }
-  @override
-  void dispose() {
-    _controller.dispose(); // Dispose of the AnimationController
-    super.dispose();
+    // _controller.forward();
   }
   DateTime today = DateTime.now();
   Map<String,dynamic> data1 ={};
   Map<String,dynamic> res ={};
   String? net,loc,cr,cs,ds,cds,db; 
    
-  
-  
+  // get()async{
+  //  await api.loadCurrentSalesData();
+  //  data1= api.responseData;
+  //  print(data1['CommonResult']['Table'][0]['NetSales'].toString());
+  // }
+
+  Future<void> get() async {
+  try {
+    await api.loadCurrentSalesData();
+    res = api.responseData;
+    if( res!= null && res.containsKey('CommonResult') && res['CommonResult'].containsKey('Table')) {
+      var netSales = res['CommonResult']['Table'][0]['NetSales'];
+      print(netSales != null ? netSales.toString() : 'NetSales not found');
+    } else {
+      print('Data structure does not match expected format');
+    }
+  } catch (e) {
+    print('Error in get(): $e');
+    // Handle exceptions
+  }
+}
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
     key: _scaffoldKey,
-    
+    // drawer: Drawer(
+    //     // Add a logout button to the drawer
+    //     child: ListView(
+    //       padding: EdgeInsets.zero,
+    //       children: <Widget>[
+    //         DrawerHeader(
+    //           decoration: BoxDecoration(
+    //             color: Colors.blue,
+    //           ),
+    //           child: Text(
+    //             'Drawer Header',
+    //             style: TextStyle(
+    //               color: Colors.white,
+    //               fontSize: 24,
+    //             ),
+    //           ),
+    //         ),
+    //         Padding(
+    //           padding: const EdgeInsets.all(10.0),
+    //           child: Text("Menu",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+    //         ),
+    //         ListTile(
+    //           leading: Icon(Icons.home),
+    //           title: Text('Home'),
+    //           onTap: () {
+    //             Navigator.pop(context); // Close the drawer
+    //             // Navigate to the Analysis page
+    //           },
+    //         ),
+    //         ListTile(
+    //           leading: Icon(Icons.analytics_outlined),
+    //           title: Text('Analysis'),
+    //           onTap: () {
+    //             Navigator.pop(context); // Close the drawer
+    //             // Navigate to the Settings page
+    //           },
+    //         ),
+    //         Divider(),
+    //         Padding(
+    //           padding: const EdgeInsets.all(10.0),
+    //           child: Text("Settings",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+    //         ),
+    //         ListTile(
+    //           leading: Icon(Icons.settings),
+    //           title: Text('Settings'),
+    //           onTap: () {
+    //             Navigator.pop(context); // Close the drawer
+    //             // Navigate to the Sub-Settings 1 page
+    //           },
+    //         ),
+    //          Divider(),
+    //          Padding(
+    //           padding: const EdgeInsets.all(10.0),
+    //           child: Text("Logout",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+    //         ),
+    //         ListTile(
+    //           leading: Icon(Icons.power_settings_new),
+    //           title: Text('Logout'),
+    //           onTap: () async{
+    //             // Implement logout functionality here
+    //             // For example, navigate to login screen
+    //             Navigator.of(context).pop(); // Close the drawer
+    //             //Navigator.pushReplacementNamed(context, '/login');
+    //             await api.deleteUrlFromSharedPreferences();
+    //             Navigator.push(context,MaterialPageRoute(builder: (context) => Login()),);
+    //           },
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+
     body:  Stack(
         
         children: [
@@ -119,7 +202,44 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               color: Colors.blue, // Set the color of the section
             ),
           ),
-          
+          // Positioned(
+          //   top: 15,
+          //   left: 0,
+          //   right: 0, 
+          //   //height: 150, // Adjust the height as needed
+          //   child: Container(
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       children: [
+          //         IconButton(onPressed: (){
+          //          _scaffoldKey.currentState?.openDrawer();
+          //         }, icon: Icon(Icons.menu),color: Colors.white,),
+          //         Row(
+          //           children: [
+          //             IconButton(onPressed: (){
+                          
+          //                  showDialog(
+          //     context: context,
+          //     builder: (BuildContext context) {
+          //       return calender();
+          //     },
+          //   );
+          //             }, icon: Icon(Icons.calendar_today,color: Colors.white,)),
+                      
+                      
+          //             IconButton(onPressed: ()async{
+          //               await api.loadPieChartData(date: date1,loca: 4,imei: mei);
+                      
+          //             }, icon: Icon(Icons.notifications,color: Colors.white,)),
+          //             IconButton(onPressed: (){
+    
+          //             }, icon: Icon(Icons.refresh,color: Colors.white,)),
+          //           ],
+          //         ),
+          //       ],
+          //     ), // Set the color of the section
+          //   ),
+          // ),
           
                       
           Positioned(
@@ -303,13 +423,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                 //mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Net sales: ${widget.current?[0].netsale}'),
-                  Text('Cas Refund: ${widget.current?[0].cashrefund}'),
-                  Text('Cash Sales: ${widget.current?[0].cashsales}'),
-                  Text('customer credit: ${widget.current?[0].customercredit}'),
-                  Text('Customer count: ${widget.current?[0].customercount}'),
-                  Text('Non cash sales: ${widget.current?[0].noncashsales}'),
-                  Text('Cash out: ${widget.current?[0].cashout}'),
+                  Text('Net sales: ${net}'),
+                  Text('Cas Refund: ${cr}'),
+                  Text('Cash Sales: ${cs}'),
+                  Text('Discount: ${ds}'),
+                  Text('Credit sales: ${cds}'),
+                  Text('Credit Refund: ${cds}'),
+                  Text('DB Name: ${db}'),
                 ],
               ),
     //           child:ListView.builder(
@@ -378,7 +498,66 @@ String monthName = DateFormat('MMM').format(DateTime.now());
 
   
   //@override
- 
+  Widget calender () {
+    return AlertDialog(
+      //titlePadding: EdgeInsets.all(0),
+      title: Container(
+        
+        // color: Colors.blue,
+        child: Column(
+          
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(year.toString()),
+            Row(
+              children: [
+                Text('${day}, '),
+                Text('${monthName} '),
+                Text(date.toString())
+              ],
+            ),
+          ],
+        ),
+      ),
+      content: SingleChildScrollView(
+        child: TableCalendar(
+          firstDay: DateTime.utc(2010, 10, 16),
+          focusedDay: now,
+          lastDay: DateTime.utc(2030, 3, 14),
+          calendarFormat: CalendarFormat.month,
+          rowHeight: 35,
+          headerStyle: HeaderStyle(
+            titleCentered: true,
+            titleTextStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),
+            formatButtonVisible: false,
+          ),
+          calendarStyle: CalendarStyle(
+            selectedDecoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ),
+            todayDecoration: BoxDecoration(
+              color: Colors.green,
+              shape: BoxShape.circle,
+            ),
+            defaultTextStyle: TextStyle(color: Colors.black),
+            weekendTextStyle: TextStyle(color: Colors.red),
+          ),
+          daysOfWeekStyle: DaysOfWeekStyle(
+            weekendStyle: TextStyle(color: Colors.red),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop(); // Close the dialog
+          },
+          child: Text('Close'),
+        ),
+      ],
+    );
+  }
   Future<void> _getImei( ) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     //if (Theme.of(context).platform == TargetPlatform.android) {

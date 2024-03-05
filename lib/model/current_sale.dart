@@ -1,13 +1,13 @@
 class CurrentSale {
-  final double? netsale;
-  final double? cashsales;
-  final double? noncashsales;
-  final int? customercount;
-  final double? avgbill;
-  final double? cashrefund;
-  final double? cashout;
-  final double? creditsales;
-  final double? customercredit;
+  final String? netsale;
+  final String? cashsales;
+  final String? noncashsales;
+  final String? customercount;
+  final String? avgbill;
+  final String? cashrefund;
+  final String? cashout;
+  final String? creditsales;
+  final String? customercredit;
 
   CurrentSale({
     this.netsale,
