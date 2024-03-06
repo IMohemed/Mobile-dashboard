@@ -10,6 +10,7 @@ import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/netsales.dart';
+import 'package:flutter_project/pages/piechart.dart';
 import 'package:flutter_project/pages/report.dart';
 import 'package:flutter_project/pages/sales.dart';
 import 'package:intl/intl.dart';
@@ -18,7 +19,8 @@ import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
   List<CurrentSale>? current;
-   Dashboard({super.key,this.current});
+  Map<String, dynamic>?  DepartmentData;
+   Dashboard({super.key,this.current, this.DepartmentData});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -35,6 +37,7 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   DateTime now =DateTime.now() ;
   int date = DateTime.now().day;
 int year = DateTime.now().year;
+Map<String, dynamic>?  departmentData={};
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
  String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
@@ -55,7 +58,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   @override
   void initState() {
     //_getImei();
-    //get();
+    get();
     super.initState();
     
     DateTime date =DateTime.now() ;
@@ -97,7 +100,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   Map<String,dynamic> res ={};
   String? net,loc,cr,cs,ds,cds,db; 
    
-  
+  get()async{
+   await api.loadPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
+    departmentData=api.DepartmentData;
+    print(departmentData?['piedate']);
+  }
   
   
   @override
@@ -198,12 +205,23 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                             children: [
                               
                               Text("Current Sales Analyze"), 
-                              SizedBox(height:16),
-                              PieChart(dataMap: datamap,chartType: ChartType.ring,ringStrokeWidth: 34,animationDuration: Duration(seconds: 1),colorList: color,chartRadius: 130,legendOptions: LegendOptions(
-                                legendPosition: LegendPosition.bottom,
-                                showLegends: false,
-                                showLegendsInRow: true 
-                              ),),
+                              
+                              // PieChart(dataMap: datamap,chartType: ChartType.ring,ringStrokeWidth: 34,animationDuration: Duration(seconds: 1),colorList: color,chartRadius: 130,legendOptions: LegendOptions(
+                              //   legendPosition: LegendPosition.bottom,
+                              //   showLegends: false,
+                              //   showLegendsInRow: true 
+                              // ),),
+                              SizedBox(height: 16,),
+                              Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Container(
+                                  //child: Container(
+                                  height: 300,
+                                  
+                                  child: PieChartWidget(departmentData:widget.DepartmentData)
+                                  //),
+                                ),
+                              ),
                   //             PieChart(
                   //   PieChartData(
                   //     sections: [

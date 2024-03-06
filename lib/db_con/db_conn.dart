@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
@@ -15,13 +16,21 @@ class ApiService extends ChangeNotifier{
   String? storedUrl;
  String url = '';
       var loca;
- Map<String, dynamic> _departmentData = {};
+      List<Color> color = [
+    Color(0xFFD95AF3), // Purple
+  Color(0xFF5AF37E), // Green
+  Color(0xFF5AAEF3), 
+
+  ];
+  PieChartData chartData = PieChartData();
+ Map<String, dynamic> DepartmentData = {};
  Map<String, dynamic> netsaleValue = {};
   List<CurrentSale> currentSales = [];
- Map<String, dynamic> get departmentData => _departmentData;
+ Map<String, dynamic> get departmentData => DepartmentData;
+
 
   void updateDepartmentData(Map<String, dynamic> newData) {
-    _departmentData = newData;
+    DepartmentData = newData;
     notifyListeners();
   }
 
@@ -275,17 +284,19 @@ Future<bool> doesUrlExist() async {
     }
     Future<void> loadCurrentSalesData({date,loca,imei}) async {
       storedUrl = await getUrlFromSharedPreferences();
+      Map<String, String> namMap = {};
   try {
     // Constructing the JSON data
+     //for (String location in loca) {
     var requestData = req.RequestJSON(
       'sp_Android_Common_API_Sales_App',
       '2',
       '',
-      '${date}',
+      '05/03/2024',
       '',
       '${loca}',
       '',
-      '${date}',
+      '05/03/2024',
       '',
       '',
       '',
@@ -319,13 +330,13 @@ Future<bool> doesUrlExist() async {
       if (responseData['CommonResult']['Table'] != null) {
   (responseData['CommonResult']['Table'] as List).forEach((element) {
     CurrentSale sale = CurrentSale(
-      netsale: element['NetSales'],
-      cashsales: element['CashSales'],
-      noncashsales: element['CreditSales'],
+      netsale: double.parse(element['NetSales']).toStringAsFixed(2),
+      cashsales: double.parse(element['CashSales']).toStringAsFixed(2),
+      noncashsales: double.parse(element['CreditSales']).toStringAsFixed(2),
       customercount: element['NoOfCustomer'],
-      avgbill: element['AVGBill'],
+      avgbill: double.parse(element['AVGBill']).toStringAsFixed(2),
       cashrefund: element['CashRefund'],
-      cashout: element['CashOut'],
+      cashout: double.parse(element['CashOut']).toStringAsFixed(2),
       creditsales: element['CreditSales'],
       customercredit: element['CustomerCredit'],
     );
@@ -338,14 +349,17 @@ Future<bool> doesUrlExist() async {
 
       String nam=responseData['CommonResult']['Table'][0]['NetSales'];
       print(nam);
-      loadPieChartData(date: 4,loca: loca,imei: imei);
+      //namMap[location] = nam;
+      //loadPieChartData(date: '05/03/2024',loca: loca,imei: imei);
       // Handle the response data here
     } else {
       // Handle error cases
       print('Error: ${response.statusCode}');
       // Optionally handle different error status codes
     }
-  } catch (e) {
+  } 
+  //}
+  catch (e) {
     // Handle exceptions
     print('Exception:n $e');
   }
@@ -427,15 +441,15 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '4',
       '',
-      '04/03/2024',
+      '05/03/2024',
       '',
-      '${loca}',
+      '01',
       '',
-      '04/03/2024',
+      '05/03/2024',
       '',
       '',
       '',
-      imei,
+      '4988b924cfe11070',
       '',
       '',
       '',
@@ -462,77 +476,72 @@ Future<void> loadPieChartData({date,loca,imei}) async {
        responseData = jsonDecode(response.body);
       print('pie sale:${responseData}');
       print(date+loca);
-//      const List<Map<String, dynamic>> piedata=[];
-//    List<Map<String, dynamic>> piedatalist=[];
-//    int i = 0;
-//    double total=0;
-//    double qty=0;
-//    double discount=0;
-//    double nettotal=0;
-//    double aa=0;
+      List<Map<String, dynamic>> piedata=[];
+   List<Map<String, dynamic>> piedatalist=[];
+   int i = 0;
+   double total=0;
+   double qty=0;
+   double discount=0;
+   double nettotal=0;
+   double aa=0;
 
-//    if (responseData['CommonResult']['Table'] != null) {
-//         if (responseData['CommonResult']['Table'][0] != null) {
-//           discount = responseData['CommonResult']['Table'][0]['Discount'];
-//           nettotal = responseData['CommonResult']['Table'][0]['NetTotal'];
-//         }
+   if (responseData['CommonResult']['Table'] != null) {
+        if (responseData['CommonResult']['Table'][0] != null) {
+          discount = responseData['CommonResult']['Table'][0]['Discount'];
+          nettotal = responseData['CommonResult']['Table'][0]['NetTotal'];
+        }
     
-//     responseData['CommonResult']['Table'].forEach((pie) {
-//           piedatalist.add({
-//             //'DrawerColor': Material_String[i],
-//             'Dept_Name': pie['Dept_Name'],
-//             'Qty': pie['Qty'],
-//             'Amount': pie['Amount'],
-//             'Contibution': pie['Contibution'],
-//           });
-//           i+=1;
-//           qty += pie['Qty'];
-//           total = pie['TotalAmount'];
+    responseData['CommonResult']['Table'].forEach((pie) {
+          piedatalist.add({
+            //'DrawerColor': Material_String[i],
+            'Dept_Name': pie['Dept_Name'],
+            'Qty': pie['Qty'],
+            'Amount': pie['Amount'],
+            'Contibution': pie['Contibution'],
+          });
+          i+=1;
+          qty += pie['Qty'];
+          total = pie['TotalAmount'];
 
-//           if (pie['Contibution'] > 5) {
-//             piedata.add({'value': pie['Contibution'], 'label': pie['Dept_Name']});
-//           }
+          if (pie['Contibution'] > 5) {
+            piedata.add({'value': pie['Contibution'], 'label': pie['Dept_Name']});
+          }
           
-//           });
+          });
         
-//         responseData['CommonResult']['Table'].forEach((element) {
-//           if (element['Contibution'] <= 5) {
-//             aa += element['Contibution'];
-//           }
-//         });
+        responseData['CommonResult']['Table'].forEach((element) {
+          if (element['Contibution'] <= 5) {
+            aa += element['Contibution'];
+          }
+        });
 
-//         piedata.add({'value': aa, 'label': 'OTHER'});
-//         }
-//         else {
-//           print('POPOOPOPOPOPO');
-//           piedata.add({});
-//           piedatalist.add({});
-//         }
-//         const chartdata = {
-//   'dataSets': [
-//     {
-//       'label': '',
-//       'values': piedata,
-//       'config': {
-//         'colors': Material,
-//         'drawValues': false,
-//         'xValuePosition': 'OUTSIDE_SLICE',
-//         'valueLineColor': Colors.black, // You may need to convert color to value
-//         'sliceSpace': 3,
-//       },
-//     },
-//   ],
-// };
-// Map<String, dynamic>  DepartmentData = {
-//   'piedate': chartdata,
-//   'departmetlist': piedatalist,
-//   'totaldepartment': total,
-//   'totaldepqty': qty, 
-//   'discount': discount,
-//   'nettotal': nettotal,
-// };
-//  updateDepartmentData(DepartmentData);
-
+        piedata.add({'value': aa});
+        }
+        else {
+          print('POPOOPOPOPOPO');
+          piedata.add({});
+          piedatalist.add({});
+        }
+        PieChartData chartData = PieChartData(
+  sections: piedata.map((data) {
+    return PieChartSectionData(
+      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
+      title: '', // Empty title
+      radius: 50, // Radius of pie chart sections
+    );
+  }).toList(),
+);
+  DepartmentData = {
+  'piedate': chartData.sections[0] ,
+  'departmetlist': piedatalist,
+  'totaldepartment': total,
+  'totaldepqty': qty, 
+  'discount': discount,
+  'nettotal': nettotal,
+};
+ updateDepartmentData(DepartmentData);
+print('d:${DepartmentData['piedate']}');
     }
     else {
       // Handle error cases

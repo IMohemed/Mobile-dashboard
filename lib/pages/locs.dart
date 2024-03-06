@@ -9,7 +9,10 @@ import 'package:table_calendar/table_calendar.dart';
 
 class HorizontalSlidingDemo extends StatelessWidget {
   List<CurrentSale>? curent;
-   HorizontalSlidingDemo( {this.curent,super.key});
+  Map<String, dynamic>?  departmentData;
+  String? mei,loc ;
+
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData});
   
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiService api = ApiService();
@@ -18,6 +21,7 @@ class HorizontalSlidingDemo extends StatelessWidget {
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,7 +134,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                        //await api.loadPieChartData(date: date1,loca: 4,imei: mei);
+                       // await api.loadPieChartData(date: '05/03/2024',loca: loc,imei: mei);
                       
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){
@@ -150,7 +154,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             child: PageView(
               scrollDirection: Axis.horizontal, // Set the scrolling direction to horizontal
               children: [
-                Dashboard(current: curent,),
+                Dashboard(current: curent,DepartmentData:departmentData ,),
                 Dashboard2(),
               ],
             ),

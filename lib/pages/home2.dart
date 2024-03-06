@@ -21,7 +21,8 @@ class _LoginState extends State<Login> {
   localDB local=localDB();
   String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String mei ='';
-  String? loc;
+  String? loc,loc1;
+  Map<String, dynamic>  departmentData={};
   List<CurrentSale> current = [];
   String imei = "";
   bool _rememberMe = false;
@@ -157,14 +158,21 @@ class _LoginState extends State<Login> {
         print(mei);
         await api.loadLocations(mei,date1);
         loc=api.loca;
+        // loc1 = loc?.replaceAll(RegExp(r'[0-9]+'), (int.parse(loc!.replaceAll(RegExp(r'[^0-9]'), '')) + 1).toString());
+        // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
+        await api.loadPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
         setState(() {
             
-          current = api.currentSales;
+          current = api.currentSales; 
+          departmentData=api.DepartmentData;
           print('cur:${current}');
-          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,)),);
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,)),);
           
         });
+        
+         
+        //await api.loadCurrentSalesData(date:date1,loca:locations,imei:mei);
         //print('net:${net}');
       //});
   //}

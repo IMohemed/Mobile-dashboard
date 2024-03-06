@@ -24,7 +24,7 @@ class AuthGate extends StatelessWidget {
       // If the future has completed successfully
       final idExists = snapshot.data!;
       if (idExists) {
-        return HorizontalSlidingDemo();
+        return HorizontalSlidingDemo ();
       } else {
         return Login();
       }
