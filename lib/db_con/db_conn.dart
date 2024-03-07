@@ -20,7 +20,24 @@ class ApiService extends ChangeNotifier{
     Color(0xFFD95AF3), // Purple
   Color(0xFF5AF37E), // Green
   Color(0xFF5AAEF3), 
-
+ Color(0xFFD95AF3), // Purple
+ Color(0xFF5AF37E), // Green
+  Color(0xFF5AAEF3), // Blue
+  Color(0xFFF3A75A), // Orange
+  Color(0xFF5A7BF3), // Light Blue
+  Color(0xFFFF6E40), // Deep Orange
+  Color(0xFF8E24AA), // Purple
+  Color(0xFF9C27B0), // Violet
+  Color(0xFFE91E63), // Pink
+  Color(0xFFF06292), // Light Pink
+ Color(0xFF607D8B), // Blue Grey
+  Color(0xFFFF5722), // Deep Orange
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), // Grey
   ];
   PieChartData chartData = PieChartData();
  Map<String, dynamic> DepartmentData = {};
@@ -292,11 +309,11 @@ Future<bool> doesUrlExist() async {
       'sp_Android_Common_API_Sales_App',
       '2',
       '',
-      '05/03/2024',
+      '06/03/2024',
       '',
       '${loca}',
       '',
-      '05/03/2024',
+      '06/03/2024',
       '',
       '',
       '',
@@ -441,11 +458,11 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '4',
       '',
-      '05/03/2024',
+      '06/03/2024',
       '',
       '01',
       '',
-      '05/03/2024',
+      '06/03/2024',
       '',
       '',
       '',
@@ -493,7 +510,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
     
     responseData['CommonResult']['Table'].forEach((pie) {
           piedatalist.add({
-            //'DrawerColor': Material_String[i],
+            'DrawerColor': color[i],
             'Dept_Name': pie['Dept_Name'],
             'Qty': pie['Qty'],
             'Amount': pie['Amount'],
@@ -515,7 +532,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
           }
         });
 
-        piedata.add({'value': aa});
+        piedata.add({'value': aa,'label': 'OTHER'});
         }
         else {
           print('POPOOPOPOPOPO');
@@ -527,13 +544,13 @@ Future<void> loadPieChartData({date,loca,imei}) async {
     return PieChartSectionData(
       color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
       value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
-      title: '', // Empty title
-      radius: 50, // Radius of pie chart sections
+      title: data['label'], // Empty title
+      radius: 80, // Radius of pie chart sections
     );
   }).toList(),
 );
   DepartmentData = {
-  'piedate': chartData.sections[0] ,
+  'piedate': chartData.sections,
   'departmetlist': piedatalist,
   'totaldepartment': total,
   'totaldepqty': qty, 
@@ -541,7 +558,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
   'nettotal': nettotal,
 };
  updateDepartmentData(DepartmentData);
-print('d:${DepartmentData['piedate']}');
+print('d:${DepartmentData['departmetlist']}');
     }
     else {
       // Handle error cases
@@ -553,8 +570,93 @@ print('d:${DepartmentData['piedate']}');
     print('Exception:a $e');
   }
     }
+Future<void> loadpaymentPieChartData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '16',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
 
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
 
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+      // Parsing the response JSON
+       responseData = jsonDecode(response.body);
+      print('pay sale:${responseData}');
+      print(date+loca);
+      int i = 0;
+    double total = 0;
+    List<Map<String, dynamic>> piedata = [];
+    List<Map<String, dynamic>> paymentmethodlist = [];
+
+    if (responseData['CommonResult']['Table'] != null) {
+      List<dynamic> table = responseData['CommonResult']['Table'];
+
+      table.sort((a, b) => b['Contibution'] - a['Contibution']);
+
+      table.forEach((piem) {
+        piedata.add({'value': piem['Contibution'], 'label': piem['Prod_Name']});
+        paymentmethodlist.add({
+          'DrawerColor': color[i],
+          'Prod_Name': piem['Prod_Name'],
+          'Contibution': piem['Contibution'],
+          'Amount': piem['Amount'],
+        });
+        i++;
+        total += piem['Amount'];
+      });
+    }
+    
+    PieChartData chartData = PieChartData(
+  sections: piedata.map((data) {
+    return PieChartSectionData(
+      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
+      title: data['label'], // Empty title
+      radius: 80, // Radius of pie chart sections
+    );
+  }).toList(),
+);
+    var PaymentMethodData = {
+          'paymentpiedate': chartData.sections,
+          'paymenttypelist': paymentmethodlist,
+          'totalpaymentmethod': total,
+          //'totalpaymentmethodpqty': listsize,
+        };
+    }}
+    catch(e){
+     print('Exception:a\p $e');
+    }
+}
 void showAlert(imei,date) {
   showDialog(
     context: navigatorKey.currentState!.context,
@@ -581,4 +683,5 @@ void showAlert(imei,date) {
     },
   );
 }
+
 }

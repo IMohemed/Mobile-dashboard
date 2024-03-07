@@ -162,6 +162,7 @@ class _LoginState extends State<Login> {
         // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
         await api.loadPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
+        
         setState(() {
             
           current = api.currentSales; 

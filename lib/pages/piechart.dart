@@ -11,12 +11,27 @@ class PieChartWidget extends StatelessWidget {
       body: Center(
         child: Container(
           height: MediaQuery.of(context).size.height/2,
-          child: PieChart(
-            PieChartData(
-              sections: [departmentData?['piedate']]?? [],
+          child: 
+          // PieChart(
+          //   PieChartData(
+          //     sections: [departmentData?['piedate']],
               
-            ),
-          ),
+          //   ),
+          // ),
+          PieChart(
+  PieChartData(
+    sections:List.generate(departmentData?['piedate'].length, (index) {
+      final sectionData = departmentData?['piedate'][index];
+      return PieChartSectionData(
+        color: sectionData.color,
+        value: sectionData.value,
+        title: sectionData.title,
+        radius: sectionData.radius,
+      );
+    }).toList(),
+  ),
+),
+
         ),
       ),
     );

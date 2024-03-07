@@ -134,7 +134,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                       // await api.loadPieChartData(date: '05/03/2024',loca: loc,imei: mei);
+                       await api.loadpaymentPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
                       
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){

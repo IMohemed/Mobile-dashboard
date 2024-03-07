@@ -1,7 +1,8 @@
 //import 'package:fl_chart/fl_chart.dart';
 import 'dart:ffi';
+import 'dart:io';
 
-//import 'package:fl_chart/fl_chart.dart';
+import 'package:fl_chart/fl_chart.dart';
 //import 'package:device_imei/device_imei.dart';
 import 'package:device_info/device_info.dart';
 //import 'package:device_info_plus/device_info_plus.dart';
@@ -14,7 +15,8 @@ import 'package:flutter_project/pages/piechart.dart';
 import 'package:flutter_project/pages/report.dart';
 import 'package:flutter_project/pages/sales.dart';
 import 'package:intl/intl.dart';
-import 'package:pie_chart/pie_chart.dart';
+import 'package:path/path.dart';
+//import 'package:pie_chart/pie_chart.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
@@ -28,6 +30,7 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  NumberFormat formatter = NumberFormat('#,##0.0', 'en_US');
   String mei ='';
    ApiService api = ApiService();
   late AnimationController _controller;
@@ -137,7 +140,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             child: Center(
               child: Container(
                 
-                child: Text(NumberFormat.currency(locale: 'si_LK',symbol: 'LKR',decimalDigits: 2).format(_number).replaceFirst('LKR', 'LKR '), // Format the number as needed
+                child: Text('LKR :${widget.current?[0].netsale}', // Format the number as needed
                             style: TextStyle(fontSize: 18,color: Colors.white,),), // Set the color of the section
               ),
             ),
@@ -162,7 +165,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                         ),
                         SizedBox(height: 34,),
                         Text(
-                          NumberFormat.currency(locale: 'si_LK',symbol: 'LKR',decimalDigits: 2).format(_number).replaceFirst('LKR', 'LKR '), // Format the number as needed
+                          'LKR ${widget.current?[0].cashsales}', // Format the number as needed
                           style: TextStyle(fontSize: 18,color: Colors.blue),
                         )
                       ],
@@ -175,7 +178,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                           style: TextStyle(fontSize: 16),
                         ),
                         Text(
-                         NumberFormat.currency(locale: 'si_LK',symbol: 'LKR',decimalDigits: 2).format(_number1).replaceFirst('LKR', 'LKR ') , // Format the number as needed
+                         'LKR ${widget.current?[0].creditsales}' , // Format the number as needed
                           style: TextStyle(fontSize: 18,color: Colors.red),
                         )
                       ],
@@ -212,16 +215,14 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               //   showLegendsInRow: true 
                               // ),),
                               SizedBox(height: 16,),
-                              Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Container(
+                              
+                                 Container(
                                   //child: Container(
-                                  height: 300,
-                                  
-                                  child: PieChartWidget(departmentData:widget.DepartmentData)
+                                    height: 300,
+                                  child: buildPieChart(widget.DepartmentData),
                                   //),
                                 ),
-                              ),
+                              //),
                   //             PieChart(
                   //   PieChartData(
                   //     sections: [
@@ -247,50 +248,75 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
+
+      //                           child: Container(
+      //                             height: 800,
+      //   //children: [
+      //    // Expanded(
+      //       child: ListView.separated(
+      //         itemCount:widget.DepartmentData?['departmetlist'].length,
+      //         separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
+      //         itemBuilder: (BuildContext context, int index) {
+      //           Map<String, dynamic> item = widget.DepartmentData?['departmetlist'][index];
+      //           return renderDepartment(item,index);
+      //         },
+      //       ),
+      //     //),
+      //   //],
+      // ),
                                 
                                 child: Container(
                                   
                                   child: DataTable(
-          
-                                    columnSpacing: 25,
-                                    dataRowHeight: 25,
-                                    
-                                            columns: [
-                                              DataColumn(label: Text('Department'),),
-                                              DataColumn(label: Text('%')),
-                                              DataColumn(label: Text('Quantity')),
-                                               DataColumn(label: Text('Value')),
-                                            ],
-                                            //
-                                            rows: datamap.entries.map((entry) {
-                      // Get the key and value from the entry
-                      String key = entry.key;
-                      double value = entry.value;
-                      int index = datamap.keys.toList().indexOf(key);
-                      // Create a DataCell for the key and value
-                      return DataRow(cells: [
-                        DataCell(Row(
-                                children: [
-                                  Container(
-                                    width: 10,
-                                    height: 10,
-                                    color: color[index],
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(key),
-                                   // Adjust the width as needed
-                                  
-                                ],
-                              ),),
-                        DataCell(Text(value.toString())),
-                        DataCell(Text(_number.toString())),
-                        DataCell(Text(_number1.toString()))
-                      ]);
-                    }).toList(), 
-                                          ),
+                                    columnSpacing: 10.0,
+  columns: [
+    DataColumn(label: Text('Department')),
+    DataColumn(label: Text('%')),
+    DataColumn(label: Text('Qty')),
+    DataColumn(label: Text('Amount')),
+  ],
+  rows: widget.DepartmentData?['departmetlist'].map<DataRow>((entry) {
+    String key = entry['Dept_Name'];
+    double value = entry['Qty'];
+    double _number = entry['Amount']; // Assuming these are the additional numbers you want to display
+    double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
+
+    // Create a DataRow for the key and value
+    return DataRow(cells: [
+      DataCell(Row(
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            
+            decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    color: entry['DrawerColor'],
+  ),
+          ),
+          SizedBox(width: 5),
+          Text(key),
+          // Adjust the width as needed
+        ],
+      )),
+      DataCell(Text(_number1.toString())),
+      DataCell(Text(value.toString())),
+      DataCell(Text(_number.toString())),
+    ]);
+  }).toList(),
+),
+                 
                                 ),
 
                               ),
+                              SizedBox(height: 16,),
+                              
+                                 Container(
+                                  //child: Container(
+                                    height: 300,
+                                  child: buildPieChart(widget.DepartmentData),
+                                  //),
+                                ), 
                               SizedBox(height: 16,),
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
@@ -434,5 +460,77 @@ String monthName = DateFormat('MMM').format(DateTime.now());
       //});
   //}
   }
+  Widget renderDepartment(Map<String, dynamic> item, int index) {
+  NumberFormat formatter = NumberFormat('#,##0.0', 'en_US');
+
+  return GestureDetector(
+    onTap: () => {},
+    //getListViewItem(item),
+    child: Container(
+      margin: EdgeInsets.all(2),
+      child: Row(
+        
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            margin: EdgeInsets.all(5),
+            width: 15,
+            height: 15,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: item['DrawerColor'],
+            ),
+          ),
+          //Expanded(
+            //flex: 2,
+            //child:
+            // 
+            Text(
+              item['Dept_Name'],
+              style: TextStyle(fontSize: 13),
+            ),
+            SizedBox(width: 30),
+          //),
+          Text(
+            formatter.format(item['Amount']), // Formatting contribution
+            textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 13),  
+          ),
+          SizedBox(width: 10),
+          Text(
+            formatter.format(item['Contibution']), // Formatting quantity
+            textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 13),  
+          ),
+          SizedBox(width: 10),
+          Text(
+            formatter.format(item['Qty']), // Formatting amount
+            textAlign: TextAlign.right,
+              style: TextStyle(fontSize: 13),  
+          ),
+          
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildPieChart(Map<String, dynamic>? departmentData) {
+  return PieChart(
+    PieChartData(
+      sections: List.generate(departmentData?['piedate'].length, (index) {
+        final sectionData = departmentData?['piedate'][index];
+        return PieChartSectionData(
+          color: sectionData.color,
+          value: sectionData.value,
+          title: sectionData.title,
+          radius: sectionData.radius,
+        );
+      }).toList(),
+      pieTouchData: PieTouchData(enabled: true),
+    ),
+  );
+}
+
 
 }
