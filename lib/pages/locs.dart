@@ -10,9 +10,15 @@ import 'package:table_calendar/table_calendar.dart';
 class HorizontalSlidingDemo extends StatelessWidget {
   List<CurrentSale>? curent;
   Map<String, dynamic>?  departmentData;
+  Map<String, dynamic>?  departmentData2;
+  Map<String, dynamic>?  departmentData3;
+  Map<String, dynamic>?  departmentData4;
+  Map<String, dynamic>?  departmentData5;
+  Map<String, dynamic>?  departmentData6;
+  Map<String, dynamic>?  departmentData7;
   String? mei,loc ;
 
-   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData});
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7});
   
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiService api = ApiService();
@@ -105,7 +111,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             right: 0, 
             height: 170, // Adjust the height as needed
             child: Container(
-              color: Colors.blue, // Set the color of the section
+              color: Color.fromARGB(255, 1, 44, 108), // Set the color of the section
             ),
           ),
           Positioned(
@@ -134,13 +140,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                       await api.loadpaymentPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
-                      
+                       await api.loadLastBillData(date: '05/03/2024',loca: "loc",imei: "mei");
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){
     
                       }, icon: Icon(Icons.refresh,color: Colors.white,)),
-                    ],
+                    ], 
                   ),
                 ],
               ), // Set the color of the section
@@ -154,7 +159,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             child: PageView(
               scrollDirection: Axis.horizontal, // Set the scrolling direction to horizontal
               children: [
-                Dashboard(current: curent,DepartmentData:departmentData ,),
+                Dashboard(current: curent,DepartmentData:departmentData ,DepartmentData2: departmentData2,DepartmentData3: departmentData3,DepartmentData4: departmentData4,DepartmentData5: departmentData5,DepartmentData6: departmentData6,DepartmentData7: departmentData7,),
                 Dashboard2(),
               ],
             ),

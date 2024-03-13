@@ -14,6 +14,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService extends ChangeNotifier{
   APIRequestBuilder req =APIRequestBuilder();
   String? storedUrl;
+  String storedUrl1="api.salesup3.onimtaitsl.com";
+
  String url = '';
       var loca;
       List<Color> color = [
@@ -38,10 +40,29 @@ class ApiService extends ChangeNotifier{
   Color(0xFF9E9E9E), 
   Color(0xFF795548), // Brown
   Color(0xFF9E9E9E), // Grey
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
+  Color(0xFF795548), // Brown
+  Color(0xFF9E9E9E), 
   ];
   PieChartData chartData = PieChartData();
  Map<String, dynamic> DepartmentData = {};
- Map<String, dynamic> netsaleValue = {};
+ Map<String, dynamic> UnitWiseData = {};
+ Map<String, dynamic> PaymentData = {};
+ Map<String, dynamic> HourlyData = {};
+ Map<String, dynamic> BasketData = {};
+ Map<String, dynamic> MonthlyData = {};
+ Map<String, dynamic> LastBillData = {};
+ double netsaleValue = 0;
   List<CurrentSale> currentSales = [];
  Map<String, dynamic> get departmentData => DepartmentData;
 
@@ -51,8 +72,38 @@ class ApiService extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateNetsaleValue(Map<String, dynamic> newData) {
+  void updateMonthlyData(Map<String, dynamic> newData) {
+    MonthlyData = newData;
+    notifyListeners();
+  }
+
+  void updatelastbillData(Map<String, dynamic> newData) {
+    LastBillData = newData;
+    notifyListeners();
+  }
+
+  void updateBasketData(Map<String, dynamic> newData) {
+    BasketData = newData;
+    notifyListeners();
+  }
+
+  void updatePaymentData(Map<String, dynamic> newData) {
+    PaymentData = newData;
+    notifyListeners();
+  }
+
+  void updatehourlydata(Map<String, dynamic> newData) {
+    HourlyData = newData;
+    notifyListeners();
+  }
+
+  void updateNetsaleValue(double newData) {
     netsaleValue = newData;
+    notifyListeners();
+  }
+
+  void updateUnitWiseData(Map<String, dynamic> newData) {
+    UnitWiseData = newData;
     notifyListeners();
   }
 
@@ -67,7 +118,7 @@ class ApiService extends ChangeNotifier{
 
   Future<void> postData() async {
     // Define the endpoint URL
-    String uri = 'https://onimtalive.com/api/merchant/settings';
+    String uri = 'http://onimtalive.com/api/merchant/settings';
 
     // Define the JSON data to be sent in the request
     Map<String, dynamic> requestData = {
@@ -137,7 +188,7 @@ Future<bool> doesUrlExist() async {
    Future<void> sendData() async {
   //   // Define the endpoint URL
      storedUrl = await getUrlFromSharedPreferences();
-    String link = 'http://${storedUrl}/api/Sales/CommonExcuteDS';
+    String link = 'http://${storedUrl1}/api/Sales/CommonExcuteDS';
 
     // Define the JSON data to be sent in the request
     Map<String, dynamic> requestData1 = {
@@ -330,7 +381,7 @@ Future<bool> doesUrlExist() async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -386,7 +437,7 @@ Future<bool> doesUrlExist() async {
       storedUrl = await getUrlFromSharedPreferences();
   try {
     var response = await http.post(
-      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -479,7 +530,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -599,7 +650,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -614,15 +665,16 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       print('pay sale:${responseData}');
       print(date+loca);
       int i = 0;
-    double total = 0;
+    double total=0;
     List<Map<String, dynamic>> piedata = [];
     List<Map<String, dynamic>> paymentmethodlist = [];
 
     if (responseData['CommonResult']['Table'] != null) {
       List<dynamic> table = responseData['CommonResult']['Table'];
+      print('table ${table}');
 
-      table.sort((a, b) => b['Contibution'] - a['Contibution']);
-
+      //table.sort((a, b) => b['Contibution'] - a['Contibution']);
+      print('table srt${table}');
       table.forEach((piem) {
         piedata.add({'value': piem['Contibution'], 'label': piem['Prod_Name']});
         paymentmethodlist.add({
@@ -631,11 +683,12 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
           'Contibution': piem['Contibution'],
           'Amount': piem['Amount'],
         });
-        i++;
-        total += piem['Amount'];
+        i+=1;
+        //total += double.parse(piem['Amount']);
+        
       });
     }
-    
+    print('pieda ${piedata}');
     PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
     return PieChartSectionData(
@@ -646,17 +699,592 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     );
   }).toList(),
 );
-    var PaymentMethodData = {
+     PaymentData = {
           'paymentpiedate': chartData.sections,
           'paymenttypelist': paymentmethodlist,
-          'totalpaymentmethod': total,
+          //'totalpaymentmethod': total,
           //'totalpaymentmethodpqty': listsize,
         };
+        print('pay-${PaymentData['']}');
+    updatePaymentData(PaymentData);
     }}
     catch(e){
      print('Exception:a\p $e');
     }
 }
+Future<void> LoadUnitWiseData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '200',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
+
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+      // Parsing the response JSON
+       responseData = jsonDecode(response.body);
+      print('pay sale:${responseData}');
+      print(date+loca);
+      int i = 0;
+     double total=0;
+     List<Map<String, dynamic>> piedata = [];
+     List<Map<String, dynamic>> unitlist = [];
+
+    if (responseData['CommonResult']['Table'] != null) {
+  List<dynamic> table = responseData['CommonResult']['Table'];
+  
+  //table.sort((a, b) {b['Amount'] - a['Amount']});
+  print('table srt1${table}');
+  table.forEach((piem) {
+    piedata.add({
+      'value': (((piem['Amount'] ) / 182381.3 ) * 100),
+  'label': 'Unit' + (piem['UNIT'] ?? ''),
+    });
+    unitlist.add({
+      'DrawerColor': color[i],
+      'Prod_Name': piem['UNIT'],
+      'Contibution': (piem['Amount'] / 182381.3) * 100,
+      'Amount': piem['Amount'],
+    });
+    i++;
+    total += piem['Amount'];
+  });
+  
+}
+     print('pieda ${piedata}');
+    PieChartData chartData = PieChartData(
+  sections: piedata.map((data) {
+    return PieChartSectionData(
+      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
+      title: data['label'], // Empty title
+      radius: 80, // Radius of pie chart sections
+    );
+  }).toList(),
+);
+print('table srt');
+     UnitWiseData = {
+          'unitpiedata': chartData.sections,
+          'unittypelist': unitlist,
+          'totalpaymentmethod': total,
+          //'totalpaymentmethodpqty': listsize,
+        };
+//         print('pay-${PaymentData['']}');
+     updateUnitWiseData(UnitWiseData);
+     
+     }
+   }
+    catch(e){
+     print('Exception:a\pn $e');
+    }
+}
+
+Future<void> loadHourlyData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '6',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
+
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    print(json);
+    int i = 0;
+    double totalreceipt = 0;
+    double totalqty = 0;
+    double totalamount = 0;
+     List<String> labelss = [];
+     List<Map<String, dynamic>> amount = [];
+     List<Map<String, dynamic>> hourlylist = [];
+     List<Map<String, dynamic>> receipcout = [];
+
+    if (json['CommonResult']['Table'] != null) {
+       List<dynamic> table = json['CommonResult']['Table'];
+
+      table.forEach((el) {
+        if (el['Receipt'] == null) {
+          bool hasError = true;
+        }
+
+        if (el['Time_Desc'] != null && el['Receipt'] != null) {
+          amount.add({'y': el['Amount']});
+          receipcout.add({'y': el['Receipt']});
+        }
+        
+        labelss.add(el['Time_Desc']);
+        hourlylist.add({
+          'DrawerColor': color[i],
+          'Time_Desc': el['Time_Desc'],
+          'Receipt': el['Receipt'],
+          'Qty': el['Qty'],
+          'Amount': el['Amount'],
+        });
+        
+        i = i + 1;
+        totalreceipt += el['Receipt'];
+        
+        totalqty = totalqty + el['Qty'];
+        totalamount = totalamount + el['Amount'];
+      });
+    }
+    
+    LineChartData data3 = LineChartData(
+  lineBarsData: [
+    LineChartBarData(
+      spots: amount.map((value) {
+        return FlSpot(
+          amount.indexOf(value).toDouble(),
+          value['y'].toDouble(),
+        );
+      }).toList(),
+      isCurved: true,
+      color: Color(0xFFFC0303),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      belowBarData: BarAreaData(show: false),
+      dotData: FlDotData(show: true),
+    ),
+  ],
+);
+
+    LineChartData reciepe = LineChartData(
+  lineBarsData: [
+    LineChartBarData(
+      spots: receipcout.map((value) {
+        return FlSpot(
+          receipcout.indexOf(value).toDouble(),
+          value['y'].toDouble(),
+        );
+      }).toList(),
+      isCurved: true,
+      color: Color.fromRGBO(254, 149, 7, 1.0)
+,
+      barWidth: 2,
+      isStrokeCapRound: true,
+      belowBarData: BarAreaData(show: false),
+      dotData: FlDotData(show: true),
+    ),
+  ],
+);
+
+    final hourlyData = {
+      'output': data3.lineBarsData,
+      'rcount': reciepe.lineBarsData,
+      'hourlysaleslist': hourlylist,
+      'totalhourly': totalamount,
+      'totalreceipt': totalreceipt,
+      'totalhourlyqty': totalqty,
+    };
+    print('hour${hourlyData}');
+    updatehourlydata(hourlyData);
+  }}
+    catch(e){
+     print('Exception:a\pn $e');
+    }
+}
+
+Future<void> LoadBucketData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '31',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
+
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    print(json);
+    int i = 0;
+    
+    double totalbillcount = 0;
+    double totalbillamount = 0;
+     //List<String> labelss = [];
+     List<Map<String, dynamic>> BucketBilllist = [];
+     List<Map<String, dynamic>> Billgraphlist = [];
+     List<Map<String, dynamic>> Amountgraphlist = [];
+
+    if (json['CommonResult']['Table'] != null) {
+       List<dynamic> table = json['CommonResult']['Table'];
+
+      table.forEach((el) {
+        if (el['Receipt'] == null) {
+          bool hasError = true;
+        }
+
+  //       if (json['CommonResult']['Table'] != null) {
+  // json['CommonResult']['Table'].forEach((el) {
+    Billgraphlist.add({'y': el['BillCount']});
+    Amountgraphlist.add({'y': el['Amount']});
+    BucketBilllist.add({
+      'DrawerColor': color[i],
+      'Column1': el['BRange'],
+      'BillCount': el['BillCount'],
+      'Amount': el['Amount'],
+    });
+    i = i + 1;
+    totalbillcount = totalbillcount + el['BillCount'];
+    totalbillamount = totalbillamount + el['Amount'];
+//   });
+// }
+      });
+    }
+    
+    LineChartData BucketBillGraph = LineChartData(
+  lineBarsData: [
+    LineChartBarData(
+      spots: Billgraphlist.map((value) {
+        return FlSpot(
+          Billgraphlist.indexOf(value).toDouble(),
+          value['y'].toDouble(),
+        );
+      }).toList(),
+      isCurved: true,
+      color: Color(0xFFFC0303),
+      barWidth: 2,
+      isStrokeCapRound: true,
+      belowBarData: BarAreaData(show: false),
+      dotData: FlDotData(show: true),
+    ),
+  ],
+);
+
+    LineChartData BucketAmountGraph = LineChartData(
+  lineBarsData: [
+    LineChartBarData(
+      spots: Amountgraphlist.map((value) {
+        return FlSpot(
+          Amountgraphlist.indexOf(value).toDouble(),
+          value['y'].toDouble(),
+        );
+      }).toList(),
+      isCurved: true,
+      color: Color.fromRGBO(254, 149, 7, 1.0)
+,
+      barWidth: 2,
+      isStrokeCapRound: true,
+      belowBarData: BarAreaData(show: false),
+      dotData: FlDotData(show: true),
+    ),
+  ],
+);
+
+     BasketData = {
+       'BucketBillGraph': BucketBillGraph.lineBarsData,
+          'BucketAmountGraph': BucketAmountGraph.lineBarsData,
+          'TotalBucketBilllist': BucketBilllist,
+          // 'Billcount': totalbillcount,
+          // 'TotalBucketAmount': totalbillamount,
+    };
+    print('bas${BasketData}');
+    updateBasketData(BasketData);
+  }}
+    catch(e){
+     print('Exception:a\pn $e');
+    }
+}
+
+Future<void> loadMonthlySalesData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '15',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
+
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    print(json);
+    int i = 0;
+    
+    double monthtotal = 0;
+    //double totalbillamount = 0;
+     //List<String> labelss = [];
+     List<Map<String, dynamic>> monthlylinechart = [];
+     List<Map<String, dynamic>> convertedmonthlylist = [];
+     //List<Map<String, dynamic>> Amountgraphlist = [];
+
+    if (json['CommonResult']['Table'] != null) {
+       List<dynamic> table = json['CommonResult']['Table'];
+
+      table.forEach((el) {
+        if (el['Receipt'] == null) {
+          bool hasError = true;
+        }
+
+  //       if (json['CommonResult']['Table'] != null) {
+  // json['CommonResult']['Table'].forEach((el) {
+    monthlylinechart.add({'x':double.parse(el['BillDate']),'y': el['Amount']});
+    convertedmonthlylist.add({'x':el['BillDate'],'y': el['Amount']*1000});
+    // BucketBilllist.add({
+    //   'DrawerColor': color[i],
+    //   'Column1': el['BRange'],
+    //   'BillCount': el['BillCount'],
+    //   'Amount': el['Amount'],
+    // });
+    monthtotal=monthtotal+el['Amount'];
+//   });
+// }
+      });
+    }
+    
+    LineChartData BucketBillGraph = LineChartData(
+  lineBarsData: [
+    LineChartBarData(
+      spots: monthlylinechart.map((value) {
+        return FlSpot(
+          value['x'],
+          value['y'].toDouble(),
+        );
+      }).toList(),
+      isCurved: true,
+      color: Colors.redAccent,
+      barWidth: 2,
+      isStrokeCapRound: true,
+      belowBarData: BarAreaData(show: false),
+      dotData: FlDotData(show: true),
+    ),
+  ],
+);
+
+//     LineChartData BucketAmountGraph = LineChartData(
+//   lineBarsData: [
+//     LineChartBarData(
+//       spots: Amountgraphlist.map((value) {
+//         return FlSpot(
+//           Amountgraphlist.indexOf(value).toDouble(),
+//           value['y'].toDouble(),
+//         );
+//       }).toList(),
+//       isCurved: true,
+//       color: Colors.yellowAccent,
+//       barWidth: 2,
+//       isStrokeCapRound: true,
+//       belowBarData: BarAreaData(show: false),
+//       dotData: FlDotData(show: true),
+//     ),
+//   ],
+// );
+
+     MonthlyData = {
+       'monthlychart': BucketBillGraph.lineBarsData,
+          'monthlylist': convertedmonthlylist,
+          'totalmonth': monthtotal * 1000,
+          'monthAvg': (monthtotal * 1000) / json['CommonResult']['Table'].length,
+    };
+    print('bas${MonthlyData}');
+    updateMonthlyData(MonthlyData);
+  }}
+    catch(e){
+     print('Exception:a\pn $e');
+    }
+}
+
+Future<void> loadLastBillData({date,loca,imei}) async {
+      storedUrl = await getUrlFromSharedPreferences();
+  try {
+    // Constructing the JSON data
+    var requestData = req.RequestJSON(
+      'sp_Android_Common_API_Sales_App',
+      '3',
+      '',
+      '06/03/2024',
+      '',
+      '01',
+      '',
+      '06/03/2024',
+      '',
+      '',
+      '',
+      '4988b924cfe11070',
+      '',
+      '',
+      '',
+      '',
+      '',
+    );
+
+    // Encoding the JSON data using jsonEncode
+    var requestBody2 = jsonEncode(requestData);
+
+    // Making the HTTP POST request
+    var response = await http.post(
+      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      headers: {
+        'content-type': 'application/json',
+        'cache-control': 'no-cache',
+      },
+      body: requestBody2,
+    );
+
+    // Checking the response status code
+    if (response.statusCode == 200) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    print(json);
+    int i = 0;
+    
+    //double monthtotal = 0;
+    
+     List<Map<String, dynamic>> LastBilllist = [];
+    int listsize = json['CommonResult']['Table'].length;
+
+    if (json['CommonResult']['Table'] != null) {
+       List<dynamic> table = json['CommonResult']['Table'];
+
+      table.forEach((el) {
+        if (el['Receipt'] == null) {
+          bool hasError = true;
+        }
+
+  
+    
+    LastBilllist.add({
+      'Receipt_No': el['Receipt_No'],
+      'Tr_Date': el['Tr_Date'],
+      'Unit': el['Unit'],
+      'Amount': el['Amount'],
+    });
+    //monthtotal=monthtotal+el['Amount'];
+//   });
+// }
+      });
+    }
+    
+    
+
+     LastBillData = {
+       'LastBilllist': LastBilllist,
+          'lasttotalbill': listsize,
+          
+    };
+    print('bas${LastBillData}');
+    updatelastbillData(LastBillData);
+  }}
+    catch(e){
+     print('Exception:a\pn $e');
+    }
+}
+
 void showAlert(imei,date) {
   showDialog(
     context: navigatorKey.currentState!.context,

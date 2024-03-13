@@ -23,6 +23,12 @@ class _LoginState extends State<Login> {
   String mei ='';
   String? loc,loc1;
   Map<String, dynamic>  departmentData={};
+  Map<String, dynamic>  departmentData2={};
+  Map<String, dynamic>  departmentData3={};
+  Map<String, dynamic>  departmentData4={};
+  Map<String, dynamic>  departmentData5={};
+  Map<String, dynamic>  departmentData6={};
+  Map<String, dynamic>  departmentData7={};
   List<CurrentSale> current = [];
   String imei = "";
   bool _rememberMe = false;
@@ -88,7 +94,7 @@ class _LoginState extends State<Login> {
                 SizedBox(height: 12.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-    primary: Colors.blue[800], // Set button color here
+    primary: Color.fromARGB(255, 1, 44, 108), // Set button color here
     minimumSize: Size(350, 50), // Set button size here
   ),
                   
@@ -107,16 +113,16 @@ class _LoginState extends State<Login> {
               print("object");
                      //print(imei);
                      else{
-                     await api.postData();
+                     //await api.postData();
                      data1= api.data;
                      
-                     if(data1['CommonResult']['Table'][0]['MAC'] == "T"){
-                      String mac = data1['CommonResult']['Table'][0]['MAC'];
-                      String url = data1['CommonResult']['Table'][0]['URL'];
+                    // if(data1['CommonResult']['Table'][0]['MAC'] == "T"){
+                      // String mac = data1['CommonResult']['Table'][0]['MAC'];
+                      // String url = data1['CommonResult']['Table'][0]['URL'];
                        
-                       //if(!idExists){
-                      await api.setUrlFromSharedPreferences(uri: url);
-                      print(mac+ url);
+                      //  //if(!idExists){
+                      // await api.setUrlFromSharedPreferences(uri: url);
+                      //print(mac+ url);
                       await api.sendData();
                       data3 = api.data2;
                       if(data3['CommonResult']['Table'][0]['ReturnMSGIMEI'] == "T")
@@ -124,7 +130,7 @@ class _LoginState extends State<Login> {
                         _getImei(); 
                         //Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo()),);
 
-                       }
+                       //}
                       //else {}
                      }
                     print(data1);
@@ -162,13 +168,25 @@ class _LoginState extends State<Login> {
         // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
         await api.loadPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
-        
+        await api.loadpaymentPieChartData(date: '05/03/2024',loca: "loc",imei: "mei");
+        await api.LoadUnitWiseData(date: '05/03/2024',loca: "loc",imei: "mei");
+        await api.loadHourlyData(date: '05/03/2024',loca: "loc",imei: "mei");
+        await api.LoadBucketData(date: '05/03/2024',loca: "loc",imei: "mei");
+        await api.loadMonthlySalesData(date: '05/03/2024',loca: "loc",imei: "mei");
+        await api.loadLastBillData(date: '05/03/2024',loca: "loc",imei: "mei");
+
         setState(() {
             
           current = api.currentSales; 
           departmentData=api.DepartmentData;
-          print('cur:${current}');
-          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,)),);
+          departmentData2 = api.PaymentData;
+          departmentData3 = api.UnitWiseData;
+          departmentData4 = api.HourlyData;
+          departmentData5= api.BasketData;
+          departmentData6=api.MonthlyData;
+          departmentData7 = api.LastBillData;
+          print('dep:${departmentData3}');
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,)),);
           
         });
         
