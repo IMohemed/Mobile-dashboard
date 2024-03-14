@@ -7,9 +7,12 @@ import 'package:flutter_project/pages/loc2.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-class HorizontalSlidingDemo extends StatelessWidget {
-  List<CurrentSale>? curent;
+class HorizontalSlidingDemo extends StatefulWidget {
+  //const HorizontalSlidingDemo({super.key});
+  Function(String)? onDateSelected;
+List<CurrentSale>? curent;
   Map<String, dynamic>?  departmentData;
+  Map<String, dynamic>?  departmentData1;
   Map<String, dynamic>?  departmentData2;
   Map<String, dynamic>?  departmentData3;
   Map<String, dynamic>?  departmentData4;
@@ -18,9 +21,16 @@ class HorizontalSlidingDemo extends StatelessWidget {
   Map<String, dynamic>?  departmentData7;
   String? mei,loc ;
 
-   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7});
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected});
+  @override
+  State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
+}
+
+class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo>  {
+  
   
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String? _selectedDay;
   ApiService api = ApiService();
   DateTime now =DateTime.now() ;
   int date = DateTime.now().day;
@@ -140,7 +150,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       
                       
                       IconButton(onPressed: ()async{
-                       await api.loadLastBillData(date: '05/03/2024',loca: "loc",imei: "mei");
+                       //await api.loadLastBillData(date: '05/03/2024',loca: "loc",imei: "mei");
                       }, icon: Icon(Icons.notifications,color: Colors.white,)),
                       IconButton(onPressed: (){
     
@@ -159,7 +169,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             child: PageView(
               scrollDirection: Axis.horizontal, // Set the scrolling direction to horizontal
               children: [
-                Dashboard(current: curent,DepartmentData:departmentData ,DepartmentData2: departmentData2,DepartmentData3: departmentData3,DepartmentData4: departmentData4,DepartmentData5: departmentData5,DepartmentData6: departmentData6,DepartmentData7: departmentData7,),
+                Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData7: widget.departmentData7,),
                 Dashboard2(),
               ],
             ),
@@ -203,7 +213,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
           ),
           calendarStyle: CalendarStyle(
             selectedDecoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.green,
               shape: BoxShape.circle,
             ),
             todayDecoration: BoxDecoration(
@@ -216,6 +226,16 @@ String monthName = DateFormat('MMM').format(DateTime.now());
           daysOfWeekStyle: DaysOfWeekStyle(
             weekendStyle: TextStyle(color: Colors.red),
           ),
+          onDaySelected: (selectedDay, focusedDay) {
+           String date1=DateFormat('dd/MM/yyyy').format(selectedDay);
+    setState(() {
+      _selectedDay = date1;
+      
+    });
+    print(_selectedDay);
+    widget.onDateSelected!(_selectedDay!);
+    Navigator.of(context).pop();
+  },
         ),
       ),
       actions: [

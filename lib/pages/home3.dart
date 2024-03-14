@@ -22,13 +22,14 @@ import 'package:table_calendar/table_calendar.dart';
 class Dashboard extends StatefulWidget {
   List<CurrentSale>? current;
   Map<String, dynamic>?  DepartmentData;
+  Map<String, dynamic>?  DepartmentData1;
   Map<String, dynamic>?  DepartmentData2;
   Map<String, dynamic>?  DepartmentData3;
   Map<String, dynamic>?  DepartmentData4;
   Map<String, dynamic>?  DepartmentData5;
   Map<String, dynamic>?  DepartmentData6;
   Map<String, dynamic>?  DepartmentData7;
-   Dashboard({super.key,this.current, this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7});
+   Dashboard({super.key,this.current, this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -156,7 +157,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   children: [
                     Text('LKR ', // Format the number as needed
                                 style: TextStyle(fontSize: 40,color: Colors.white,),),
-                    Text(NumberFormat("#,###.##").format(double.parse(widget.current?[0].netsale ?? '0') ),style: TextStyle(fontSize: 40,color: Colors.white,))
+                    Text(NumberFormat("#,###.##").format(widget.DepartmentData1?['netsale']  ),style: TextStyle(fontSize: 40,color: Colors.white,))
                   ],
                 ), // Set the color of the section
               ),
@@ -189,7 +190,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.current?[0].cashsales ?? '00'))}',
+        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['CashSales'] ?? '00'))}',
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
     ],
@@ -213,7 +214,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.current?[0].creditsales ?? '0'))}',
+        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['CreditSales'] ?? '0'))}',
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
     ],
@@ -235,12 +236,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               child:
               // [
                 Padding(
-                  padding: const EdgeInsets.only(top: 220,left: 5,right: 5,bottom: 3),
+                  padding: const EdgeInsets.only(top: 220,left: 5,right: 5,bottom: 0),
                   child: SingleChildScrollView(
                     //child:Card(
                        //elevation: 4,
                       child: Padding(
-                        padding: const EdgeInsets.only(bottom:102,top:20.0,left: 0,right: 0),
+                        padding: const EdgeInsets.only(bottom:8,top:20.0,left: 0,right: 0),
                         
                         child: Container(
                           child: Column(
@@ -569,8 +570,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               
                              Padding(
   padding: const EdgeInsets.all(0.0),
-  child: SizedBox(
-    height: 1000,
+  // child: SizedBox(
+  //   height: 1000,
     child: Card(
       elevation: 3,
       child: Padding(
@@ -671,20 +672,20 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
       ),
     ),
-  ),
+  
 ),
          SizedBox(height: 16,),
                                  
-                                 SizedBox(height: 16,),
+                                //  SizedBox(height: 16,),
                               
                              Padding(
   padding: const EdgeInsets.all(0.0),
-  child: SizedBox(
-    height: 800,
+  // child: SizedBox(
+  //   height: 800,
     child: Card(
       elevation: 3,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
           children: [
             Text("Basket Values",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
@@ -699,10 +700,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               ),
             ),
             
-            Expanded(
-              child: Container(
-                height: 40,
-                child: buildLineChart(widget.DepartmentData5?['BucketBillGraph']),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Expanded(
+                child: Container(
+                  height: 40,
+                  child: buildLineChart(widget.DepartmentData5?['BucketBillGraph']),
+                ),
               ),
             ),
             Padding(
@@ -763,7 +767,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
       ),
     ),
-  ),
+  
 ),
         
                                  
@@ -829,65 +833,65 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                     
-                                   child: Column(
-                                              //mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Center(child: Padding(
-                                                  padding: const EdgeInsets.only(bottom:8.0),
-                                                  child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                                )),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Net sales: '),
-                                                    Text('${widget.current?[0].netsale}')
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Cas Refund: '),
-                                                    Text('${widget.current?[0].cashrefund}')
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Cash Sales: '),
-                                                    Text('${widget.current?[0].cashsales}')
-                                                  ],
-                                                ),
-                                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Customer credit:'),
-                                      Text('${widget.current?[0].customercredit}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Customer count:'),
-                                      Text('${widget.current?[0].customercount}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Non cash sales:'),
-                                      Text('${widget.current?[0].noncashsales}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Cash out:'),
-                                      Text('${widget.current?[0].cashout}'),
-                                    ],
-                                  ),
-                                              ],
-                                            ),
+                                  //  child: Column(
+                                  //             //mainAxisSize: MainAxisSize.max,
+                                  //             crossAxisAlignment: CrossAxisAlignment.start,
+                                  //             children: [
+                                  //               Center(child: Padding(
+                                  //                 padding: const EdgeInsets.only(bottom:8.0),
+                                  //                 child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                  //               )),
+                                  //               Row(
+                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                 children: [
+                                  //                   Text('Net sales: '),
+                                  //                   Text('${widget.current?[0].netsale}')
+                                  //                 ],
+                                  //               ),
+                                  //               Row(
+                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                 children: [
+                                  //                   Text('Cas Refund: '),
+                                  //                   Text('${widget.current?[0].cashrefund}')
+                                  //                 ],
+                                  //               ),
+                                  //               Row(
+                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //                 children: [
+                                  //                   Text('Cash Sales: '),
+                                  //                   Text('${widget.current?[0].cashsales}')
+                                  //                 ],
+                                  //               ),
+                                  //               Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Text('Customer credit:'),
+                                  //     Text('${widget.current?[0].customercredit}'),
+                                  //   ],
+                                  // ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Text('Customer count:'),
+                                  //     Text('${widget.current?[0].customercount}'),
+                                  //   ],
+                                  // ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Text('Non cash sales:'),
+                                  //     Text('${widget.current?[0].noncashsales}'),
+                                  //   ],
+                                  // ),
+                                  // Row(
+                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //   children: [
+                                  //     Text('Cash out:'),
+                                  //     Text('${widget.current?[0].cashout}'),
+                                  //   ],
+                                  // ),
+                                  //             ],
+                                  //           ),
                                   //           child:ListView.builder(
                                   //   itemCount: currentSales.length,
                                   //   itemBuilder: (context, index) {
@@ -950,22 +954,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                      ),
                                    ),
                               ), 
-                              
-               Column(
-                //mainAxisSize: MainAxisSize.max,
-                children: [
-                  // Include the Report widget here
-                  SizedBox(height: 16),
-                  
-                ],
-              ),
-            //),
-            // Other widgets here
-          //],
-        //),
-                          // ),
-                          
-                            ]
+                              ]
                             
                           ) 
                           )
@@ -1095,7 +1084,7 @@ Widget buildPieChart(List departmentData) {
           color: sectionData.color,
           value: sectionData.value,
           title: sectionData.title,
-          radius: istouched?120:sectionData.radius
+          radius: istouched?100:sectionData.radius
         );
       }).toList(),
       pieTouchData: PieTouchData(

@@ -62,7 +62,8 @@ class ApiService extends ChangeNotifier{
  Map<String, dynamic> BasketData = {};
  Map<String, dynamic> MonthlyData = {};
  Map<String, dynamic> LastBillData = {};
- double netsaleValue = 0;
+ Map<String, dynamic> sale = {};
+ String? netsaleValue;
   List<CurrentSale> currentSales = [];
  Map<String, dynamic> get departmentData => DepartmentData;
 
@@ -97,7 +98,7 @@ class ApiService extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateNetsaleValue(double newData) {
+  void updateNetsaleValue(String newData) {
     netsaleValue = newData;
     notifyListeners();
   }
@@ -360,15 +361,15 @@ Future<bool> doesUrlExist() async {
       'sp_Android_Common_API_Sales_App',
       '2',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '${loca}',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
-      imei,
+      '${imei}',
       '',
       '',
       '',
@@ -396,22 +397,23 @@ Future<bool> doesUrlExist() async {
       print('current sale:${responseData}');
 
       if (responseData['CommonResult']['Table'] != null) {
-  (responseData['CommonResult']['Table'] as List).forEach((element) {
-    CurrentSale sale = CurrentSale(
-      netsale: double.parse(element['NetSales']).toStringAsFixed(2),
-      cashsales: double.parse(element['CashSales']).toStringAsFixed(2),
-      noncashsales: double.parse(element['CreditSales']).toStringAsFixed(2),
-      customercount: element['NoOfCustomer'],
-      avgbill: double.parse(element['AVGBill']).toStringAsFixed(2),
-      cashrefund: element['CashRefund'],
-      cashout: double.parse(element['CashOut']).toStringAsFixed(2),
-      creditsales: element['CreditSales'],
-      customercredit: element['CustomerCredit'],
-    );
-    currentSales.add(sale);
-    updateNetsaleValue(element['NetSales']);
+  //(responseData['CommonResult']['Table'] as List).forEach((element) {
+     sale = {
+      'netsale': double.parse(responseData['CommonResult']['Table']['NetSales']).toStringAsFixed(2),
+       'cashsales': double.parse(responseData['CommonResult']['Table'][0]['CashSales']).toStringAsFixed(2),
+       'noncashsales': responseData['CommonResult']['Table'][0]['CreditSales'],
+      'customercount': responseData['CommonResult']['Table'][0]['NoOfCustomer'],
+      'avgbill': double.parse(responseData['CommonResult']['Table'][0]['AVGBill']).toStringAsFixed(2),
+      'cashrefund': responseData['CommonResult']['Table'][0]['CashRefund'],
+      'cashout': double.parse(responseData['CommonResult']['Table'][0]['CashOut']).toStringAsFixed(2),
+      'creditsales': responseData['CommonResult']['Table'][0]['CreditSales'],
+      'customercredit': responseData['CommonResult']['Table'][0]['CustomerCredit'],
+     };
+     print(sale);
+    //currentSales.add(sale);
+    //updateNetsaleValue(element['NetSales']);
       updateCurrentSales(currentSales);
-  });
+  //});
 }     
       
 
@@ -509,11 +511,11 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '4',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -629,11 +631,11 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '16',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -720,11 +722,11 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '200',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -817,11 +819,11 @@ Future<void> loadHourlyData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '6',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -952,11 +954,11 @@ Future<void> LoadBucketData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '31',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -1082,11 +1084,11 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '15',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
@@ -1208,11 +1210,11 @@ Future<void> loadLastBillData({date,loca,imei}) async {
       'sp_Android_Common_API_Sales_App',
       '3',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '01',
       '',
-      '06/03/2024',
+      '${date}',
       '',
       '',
       '',
