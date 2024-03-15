@@ -142,7 +142,25 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             ),
           ),
           
-          
+          Positioned(
+            top: 25,
+            left: 0,
+            right: 0, 
+            //height: 150, // Adjust the height as needed
+            child: Center(
+              child: Container(
+                
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Last income on ', // Format the number as needed
+                                style: TextStyle(fontSize: 16,color: Colors.white,),),
+                    Text('${date1}',style: TextStyle(fontSize: 16,color: Colors.white,))
+                  ],
+                ), // Set the color of the section
+              ),
+            ),
+          ),
                       
           Positioned(
             top: 55,
@@ -157,7 +175,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   children: [
                     Text('LKR ', // Format the number as needed
                                 style: TextStyle(fontSize: 40,color: Colors.white,),),
-                    Text(NumberFormat("#,###.##").format(widget.DepartmentData1?['netsale']  ),style: TextStyle(fontSize: 40,color: Colors.white,))
+                    Text(NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['netsale'] ?? '0' ) ),style: TextStyle(fontSize: 40,color: Colors.white,))
                   ],
                 ), // Set the color of the section
               ),
@@ -190,7 +208,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['CashSales'] ?? '00'))}',
+        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['cashsales'] ?? '0'))}',
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
     ],
@@ -214,7 +232,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['CreditSales'] ?? '0'))}',
+        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['noncashsales'] ?? '0'))}',
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
     ],
@@ -582,12 +600,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             
             Padding(
               padding: const EdgeInsets.only(top:16.0,bottom: 8.0),
-              child: Expanded(
+              //child: Expanded(
                 child: Container(
                   height: 100,
                   child: buildLineChart(widget.DepartmentData4?['output']),
                 ),
-              ),
+              //),
             ),
             SizedBox(
               height: 100,
@@ -598,12 +616,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             ),
             Padding(
               padding: const EdgeInsets.only(top:8.0,bottom: 16.0),
-              child: Expanded(
+              //child: Expanded(
                 child: Container(
                   height: 100,
                   child: buildLineChart(widget.DepartmentData4?['output']),
                 ),
-              ),
+              //),
             ),
             
                Padding(
@@ -692,22 +710,22 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             
             Padding(
               padding: const EdgeInsets.only(top:16.0,bottom: 5.0),
-              child: Expanded(
+              //child: Expanded(
                 child: Container(
                   height: 100,
                   child: buildLineChart(widget.DepartmentData5?['BucketAmountGraph']),
                 ),
-              ),
+              //),
             ),
             
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Expanded(
+              //child: Expanded(
                 child: Container(
                   height: 40,
                   child: buildLineChart(widget.DepartmentData5?['BucketBillGraph']),
                 ),
-              ),
+              //),
             ),
             Padding(
                                    padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
@@ -833,65 +851,65 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                   padding: const EdgeInsets.all(8.0),
                                   child: Container(
                                     
-                                  //  child: Column(
-                                  //             //mainAxisSize: MainAxisSize.max,
-                                  //             crossAxisAlignment: CrossAxisAlignment.start,
-                                  //             children: [
-                                  //               Center(child: Padding(
-                                  //                 padding: const EdgeInsets.only(bottom:8.0),
-                                  //                 child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                  //               )),
-                                  //               Row(
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Text('Net sales: '),
-                                  //                   Text('${widget.current?[0].netsale}')
-                                  //                 ],
-                                  //               ),
-                                  //               Row(
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Text('Cas Refund: '),
-                                  //                   Text('${widget.current?[0].cashrefund}')
-                                  //                 ],
-                                  //               ),
-                                  //               Row(
-                                  //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //                 children: [
-                                  //                   Text('Cash Sales: '),
-                                  //                   Text('${widget.current?[0].cashsales}')
-                                  //                 ],
-                                  //               ),
-                                  //               Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text('Customer credit:'),
-                                  //     Text('${widget.current?[0].customercredit}'),
-                                  //   ],
-                                  // ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text('Customer count:'),
-                                  //     Text('${widget.current?[0].customercount}'),
-                                  //   ],
-                                  // ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text('Non cash sales:'),
-                                  //     Text('${widget.current?[0].noncashsales}'),
-                                  //   ],
-                                  // ),
-                                  // Row(
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text('Cash out:'),
-                                  //     Text('${widget.current?[0].cashout}'),
-                                  //   ],
-                                  // ),
-                                  //             ],
-                                  //           ),
+                                   child: Column(
+                                              //mainAxisSize: MainAxisSize.max,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Center(child: Padding(
+                                                  padding: const EdgeInsets.only(bottom:8.0),
+                                                  child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                                )),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text('Net sales: '),
+                                                    Text('${widget.DepartmentData1?['netsale']}')
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text('Cas Refund: '),
+                                                    Text('${widget.DepartmentData1?['cashrefund']}')
+                                                  ],
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    Text('Cash Sales: '),
+                                                    Text('${widget.DepartmentData1?['cashsales']}')
+                                                  ],
+                                                ),
+                                                Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Customer credit:'),
+                                      Text('${widget.DepartmentData1?['customercredit']}'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Customer count:'),
+                                      Text('${widget.DepartmentData1?['customercount']}'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Non cash sales:'),
+                                      Text('${widget.DepartmentData1?['noncashsales']}'),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('Cash out:'),
+                                      Text('${widget.DepartmentData1?['CashOut']}'),
+                                    ],
+                                  ),
+                                              ],
+                                            ),
                                   //           child:ListView.builder(
                                   //   itemCount: currentSales.length,
                                   //   itemBuilder: (context, index) {
@@ -1084,7 +1102,7 @@ Widget buildPieChart(List departmentData) {
           color: sectionData.color,
           value: sectionData.value,
           title: sectionData.title,
-          radius: istouched?100:sectionData.radius
+          radius: sectionData.radius
         );
       }).toList(),
       pieTouchData: PieTouchData(
@@ -1102,7 +1120,7 @@ Widget buildPieChart(List departmentData) {
       show: false,
       border: Border.all(color: Colors.transparent),
     ),
-    sectionsSpace: 0,
+    //sectionsSpace: 0,
     //centerSpaceRadius: 0,
     //sections: showingSections(),
     // Set the pie chart to 3D

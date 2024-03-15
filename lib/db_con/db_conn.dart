@@ -21,13 +21,15 @@ class ApiService extends ChangeNotifier{
       List<Color> color = [
     Color(0xFFD95AF3), // Purple
   Color(0xFF5AF37E), // Green
-  Color(0xFF5AAEF3), 
+  Color(0xFF5AAEF3),
+  Color(0xFFF3A75A), 
+  Color(0xFFFF6E40),
  Color(0xFFD95AF3), // Purple
  Color(0xFF5AF37E), // Green
   Color(0xFF5AAEF3), // Blue
-  Color(0xFFF3A75A), // Orange
+   // Orange
   Color(0xFF5A7BF3), // Light Blue
-  Color(0xFFFF6E40), // Deep Orange
+   // Deep Orange
   Color(0xFF8E24AA), // Purple
   Color(0xFF9C27B0), // Violet
   Color(0xFFE91E63), // Pink
@@ -369,7 +371,7 @@ Future<bool> doesUrlExist() async {
       '',
       '',
       '',
-      '${imei}',
+      '${mac_id}',
       '',
       '',
       '',
@@ -399,14 +401,14 @@ Future<bool> doesUrlExist() async {
       if (responseData['CommonResult']['Table'] != null) {
   //(responseData['CommonResult']['Table'] as List).forEach((element) {
      sale = {
-      'netsale': double.parse(responseData['CommonResult']['Table']['NetSales']).toStringAsFixed(2),
+      'netsale': double.parse(responseData['CommonResult']['Table'][0]['NetSales']).toStringAsFixed(2),
        'cashsales': double.parse(responseData['CommonResult']['Table'][0]['CashSales']).toStringAsFixed(2),
        'noncashsales': responseData['CommonResult']['Table'][0]['CreditSales'],
       'customercount': responseData['CommonResult']['Table'][0]['NoOfCustomer'],
       'avgbill': double.parse(responseData['CommonResult']['Table'][0]['AVGBill']).toStringAsFixed(2),
       'cashrefund': responseData['CommonResult']['Table'][0]['CashRefund'],
       'cashout': double.parse(responseData['CommonResult']['Table'][0]['CashOut']).toStringAsFixed(2),
-      'creditsales': responseData['CommonResult']['Table'][0]['CreditSales'],
+      
       'customercredit': responseData['CommonResult']['Table'][0]['CustomerCredit'],
      };
      print(sale);
