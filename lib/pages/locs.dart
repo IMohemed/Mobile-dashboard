@@ -254,7 +254,7 @@ void enableCalendar() {
       _isCalendarEnabled = false;
     });
     print(_selectedDay);
-     Timer(Duration(seconds: 25), () {
+     Timer(Duration(seconds: 40), () {
     setState(() {
       _isCalendarEnabled = true;
     });

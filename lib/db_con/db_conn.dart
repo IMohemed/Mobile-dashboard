@@ -349,6 +349,7 @@ Future<bool> doesUrlExist() async {
     
       // An error occurred during the request, print the error
       print('Error: $e');
+      showAlert();
     }
 
 
@@ -433,7 +434,8 @@ Future<bool> doesUrlExist() async {
   //}
   catch (e) {
     // Handle exceptions
-    print('Exception:n $e');
+    print('Exception:n $e');showAlert();
+
   }
     }
 
@@ -501,7 +503,7 @@ for (var element in names) {
   } catch (e) {
     // Handle exceptions
     print('Exception: $e');
-    showAlert(imei,date);
+    showAlert();
   }
 }
 
@@ -562,8 +564,8 @@ Future<void> loadPieChartData({date,loca,imei}) async {
           discount = responseData['CommonResult']['Table'][0]['Discount'];
           nettotal = responseData['CommonResult']['Table'][0]['NetTotal'];
         }
-    
-    responseData['CommonResult']['Table'].forEach((pie) {
+    List<dynamic> table = responseData['CommonResult']['Table'];
+    table.forEach((pie) {
           piedatalist.add({
             'DrawerColor': color[i],
             'Dept_Name': pie['Dept_Name'],
@@ -581,7 +583,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
           
           });
         
-        responseData['CommonResult']['Table'].forEach((element) {
+        table.forEach((element) {
           if (element['Contibution'] <= 5) {
             aa += element['Contibution'];
           }
@@ -589,11 +591,11 @@ Future<void> loadPieChartData({date,loca,imei}) async {
 
         piedata.add({'value': aa,'label': 'OTHER'});
         }
-        else {
-          print('POPOOPOPOPOPO');
-          piedata.add({});
-          piedatalist.add({});
-        }
+        // else {
+        //   print('POPOOPOPOPOPO');
+        //   piedata.add[{}];
+        //   piedatalist.add({});
+        // }
         PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
     return PieChartSectionData(
@@ -623,6 +625,7 @@ print('d:${DepartmentData['departmetlist']}');
    catch (e) {
     // Handle exceptions
     print('Exception:a $e');
+    showAlert();
   }
     }
 Future<void> loadpaymentPieChartData({date,loca,imei}) async {
@@ -714,6 +717,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     }}
     catch(e){
      print('Exception:a\p $e');
+     showAlert();
     }
 }
 Future<void> LoadUnitWiseData({date,loca,imei}) async {
@@ -810,6 +814,7 @@ print('table srt');
    }
     catch(e){
      print('Exception:a\pn $e');
+     showAlert();
     }
 }
 
@@ -945,6 +950,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
   }}
     catch(e){
      print('Exception:a\pn $e');
+     showAlert();
     }
 }
 
@@ -1075,6 +1081,7 @@ Future<void> LoadBucketData({date,loca,imei}) async {
   }}
     catch(e){
      print('Exception:a\pn $e');
+     showAlert();
     }
 }
 
@@ -1201,6 +1208,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
   }}
     catch(e){
      print('Exception:a\pn $e');
+     showAlert();
     }
 }
 
@@ -1286,10 +1294,11 @@ Future<void> loadLastBillData({date,loca,imei}) async {
   }}
     catch(e){
      print('Exception:a\pn $e');
+     showAlert();
     }
 }
 
-void showAlert(imei,date) {
+void showAlert() {
   showDialog(
     context: navigatorKey.currentState!.context,
     builder: (BuildContext context) {

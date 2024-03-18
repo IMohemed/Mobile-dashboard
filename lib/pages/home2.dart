@@ -181,12 +181,12 @@ class _LoginState extends State<Login> {
         setState(() {
             
           departmentData1 = api.sale; 
-          departmentData=api.DepartmentData;
+          departmentData = api.DepartmentData;
           departmentData2 = api.PaymentData;
           departmentData3 = api.UnitWiseData;
           departmentData4 = api.HourlyData;
-          departmentData5= api.BasketData; 
-          departmentData6=api.MonthlyData;
+          departmentData5 = api.BasketData; 
+          departmentData6 = api.MonthlyData;
           departmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
           Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,)),);

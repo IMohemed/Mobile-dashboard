@@ -137,9 +137,14 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             left: 0,
             right: 0, 
             height: 150, // Adjust the height as needed
-            child: Container(
-              color: Color.fromARGB(255, 1, 44, 108), // Set the color of the section
-            ),
+            //  SliverPadding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   sliver: SliverToBoxAdapter(
+                child: Container(
+                  color: Color.fromARGB(255, 1, 44, 108), // Set the color of the section
+                ),
+            //   ),
+            // ),
           ),
           
           Positioned(
@@ -161,6 +166,28 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               ),
             ),
           ),
+//           SliverPadding(
+//   padding: EdgeInsets.only(top: 25),
+//   sliver: SliverToBoxAdapter(
+//     child: Container(
+//       alignment: Alignment.center,
+//       color: Colors.blue, // Set the color of the section
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Text(
+//             'Last income on ',
+//             style: TextStyle(fontSize: 16, color: Colors.white),
+//           ),
+//           Text(
+//             '$date1',
+//             style: TextStyle(fontSize: 16, color: Colors.white),
+//           )
+//         ],
+//       ),
+//     ),
+//   ),
+// ),
                       
           Positioned(
             top: 55,
@@ -181,6 +208,29 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               ),
             ),
           ),
+//           SliverPadding(
+//   padding: EdgeInsets.only(top: 55),
+//   sliver: SliverToBoxAdapter(
+//     child: Container(
+//       alignment: Alignment.center,
+//       color: Colors.blue, // Set the color of the section
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Text(
+//             'LKR ',
+//             style: TextStyle(fontSize: 40, color: Colors.white),
+//           ),
+//           Text(
+//             NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['netsale'] ?? '0')),
+//             style: TextStyle(fontSize: 40, color: Colors.white),
+//           )
+//         ],
+//       ),
+//     ),
+//   ),
+// ),
+
           // Content card overlapping the border of the color
           Positioned(
             top: 110, // Adjust the top position to overlap with the border
@@ -247,6 +297,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             ),
     
           ),
+//  
+
           SizedBox(height: 10.0,),
           //SingleChildScrollView(
             //scrollDirection: Axis.horizontal,
@@ -254,176 +306,182 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               child:
               // [
                 Padding(
-                  padding: const EdgeInsets.only(top: 220,left: 5,right: 5,bottom: 0),
-                  child: SingleChildScrollView(
+                  padding: const EdgeInsets.only(top: 240,left: 5,right: 5,bottom: 0),
+                  //child: SingleChildScrollView(
                     //child:Card(
                        //elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom:8,top:20.0,left: 0,right: 0),
-                        
-                        child: Container(
-                          child: Column(
-                            children: [
-                              
-                              Card(
-                                elevation: 3,
-                                child: Column(
-                                  children: [
-                                    Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Current Sales Summary",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                                    ),
-                                  
-                                 
+                      child: CustomScrollView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        slivers: [
+                          SliverList(
+                            //physics: AlwaysScrollableScrollPhysics(),
+                            delegate: SliverChildListDelegate( [
+                              Padding(
+                                padding: const EdgeInsets.only(bottom:8,top:5.0,left: 0,right: 0),
                                 
-                                // PieChart(dataMap: datamap,chartType: ChartType.ring,ringStrokeWidth: 34,animationDuration: Duration(seconds: 1),colorList: color,chartRadius: 130,legendOptions: LegendOptions(
-                                //   legendPosition: LegendPosition.bottom,
-                                //   showLegends: false,
-                                //   showLegendsInRow: true 
-                                // ),),
-                                SizedBox(height: 16,),
-                                
-                                   Container(
-                                    //child: Container(
-                                      height: 300,
-                                    child: buildPieChart(widget.DepartmentData?['piedate']),
-                                    //),
-                                  ),
-                                   
-                                
-                                SizedBox(height: 14,),
-                                
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                              
-                                    //                           child: Container(
-                                    //                             height: 800,
-                                    //   //children: [
-                                    //    // Expanded(
-                                    //       child: ListView.separated(
-                                    //         itemCount:widget.DepartmentData?['departmetlist'].length,
-                                    //         separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
-                                    //         itemBuilder: (BuildContext context, int index) {
-                                    //           Map<String, dynamic> item = widget.DepartmentData?['departmetlist'][index];
-                                    //           return renderDepartment(item,index);
-                                    //         },
-                                    //       ),
-                                    //     //),
-                                    //   //],
-                                    // ),
-                                  
-                                  child: Container(
-                                    
-                                    child: DataTable(
-                                      dataRowHeight: 30,
-                                      columnSpacing: 10.0,
-                                      horizontalMargin: 0,
-                                columns: [
-                                  DataColumn(label: Text('Department',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                  DataColumn(label: Text('%',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                  DataColumn(label: Text('Qty',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                  DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                ],
-                                rows: widget.DepartmentData?['departmetlist'].map<DataRow>((entry) {
-                                  String key = entry['Dept_Name'];
-                                  double value = entry['Qty'];
-                                  double _number = entry['Amount']; // Assuming these are the additional numbers you want to display
-                                  double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
-                              
-                                  // Create a DataRow for the key and value
-                                  return DataRow(cells: [
-                                    DataCell(Row(
-                                      children: [
-                                        Container(
-                                          width: 10,
-                                          height: 10,
-                                          
-                                          decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: entry['DrawerColor'],
-                                ),
-                                        ),
-                                        SizedBox(width: 5),
-                                        SizedBox(width: 110,child: Text(key)),
-                                        // Adjust the width as needed
-                                      ],
-                                    )),
-                                    DataCell(SizedBox(width: 40,child: Text(_number1.toString()))),
-                                    DataCell(SizedBox(width: 60,child: Text(value.toString()))),
-                                    DataCell(Text(_number.toString())),
-                                  ]);
-                                }).toList(),
-                              ),
-                                               
-                                  ),
-                                
-                                ),
-                                 SizedBox(
-                                            height: 15,
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                              child: Divider(
-                                                color: Colors.black,
-                                                thickness: 0,
-                                              ),
-                                            ),
-                                          ),
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                child: Container(
                                   child: Column(
-                                      children: [
-                                        Row(
+                                    children: [
+                                      
+                                      Card(
+                                        elevation: 3,
+                                        child: Column(
                                           children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'QTY :',
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(fontSize: 13),
-                                              ),
+                                            Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text("Current Sales Summary",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
                                             ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(right:10.0),
-                                                child: Text(
-                                                  formatter.format(widget.DepartmentData?['totaldepqty']),
-                                                  textAlign: TextAlign.right,
-                                                  style: TextStyle(fontSize: 13),
+                                          
+                                         
+                                        
+                                        // PieChart(dataMap: datamap,chartType: ChartType.ring,ringStrokeWidth: 34,animationDuration: Duration(seconds: 1),colorList: color,chartRadius: 130,legendOptions: LegendOptions(
+                                        //   legendPosition: LegendPosition.bottom,
+                                        //   showLegends: false,
+                                        //   showLegendsInRow: true 
+                                        // ),),
+                                        SizedBox(height: 16,),
+                                        
+                                           Container(
+                                            //child: Container(
+                                              height: 300,
+                                            child:widget.DepartmentData?['piedate'] != null? buildPieChart(widget.DepartmentData?['piedate']):SizedBox(),
+                                            //),
+                                          ),
+                                           
+                                        
+                                        SizedBox(height: 14,),
+                                        
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                      
+                                            //                           child: Container(
+                                            //                             height: 800,
+                                            //   //children: [
+                                            //    // Expanded(
+                                            //       child: ListView.separated(
+                                            //         itemCount:widget.DepartmentData?['departmetlist'].length,
+                                            //         separatorBuilder: (BuildContext context, int index) => SizedBox(height: 10),
+                                            //         itemBuilder: (BuildContext context, int index) {
+                                            //           Map<String, dynamic> item = widget.DepartmentData?['departmetlist'][index];
+                                            //           return renderDepartment(item,index);
+                                            //         },
+                                            //       ),
+                                            //     //),
+                                            //   //],
+                                            // ),
+                                          
+                                          child: Container(
+                                            
+                                            child: DataTable(
+                                              dataRowHeight: 30,
+                                              columnSpacing: 10.0,
+                                              horizontalMargin: 0,
+                                        columns: [
+                                          DataColumn(label: Text('Department',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
+                                          DataColumn(label: Text('%',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
+                                          DataColumn(label: Text('Qty',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
+                                          DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
+                                        ],
+                                        rows: widget.DepartmentData?['departmetlist'].map<DataRow>((entry) {
+                                          String key = entry['Dept_Name'];
+                                          double value = entry['Qty'];
+                                          double _number = entry['Amount']; // Assuming these are the additional numbers you want to display
+                                          double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
+                                      
+                                          // Create a DataRow for the key and value
+                                          return DataRow(cells: [
+                                            DataCell(Row(
+                                              children: [
+                                                Container(
+                                                  width: 10,
+                                                  height: 10,
+                                                  
+                                                  decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: entry['DrawerColor'],
+                                        ),
                                                 ),
-                                              ),
-                                            ),
-                                          ],
+                                                SizedBox(width: 5),
+                                                SizedBox(width: 110,child: Text(key)),
+                                                // Adjust the width as needed
+                                              ],
+                                            )),
+                                            DataCell(SizedBox(width: 40,child: Text(_number1.toString()))),
+                                            DataCell(SizedBox(width: 60,child: Text(value.toString()))),
+                                            DataCell(Text(_number.toString())),
+                                          ]);
+                                        }).toList(),
+                                      ),
+                                                       
+                                          ),
+                                        
                                         ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                'TOTAL :',
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(fontSize: 13),
-                                              ),
+                                         SizedBox(
+                                                    height: 15,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 0,
+                                                      ),
+                                                    ),
+                                                  ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'QTY :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:10.0),
+                                                        child: Text(
+                                                          formatter.format(widget.DepartmentData?['totaldepqty']?? 0) ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData?['totaldepartment'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
                                             ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                formatter.format(widget.DepartmentData?['totaldepartment']),
-                                                textAlign: TextAlign.right,
-                                                style: TextStyle(fontSize: 13),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                    
-                                ),],),
-                              ),
-                              SizedBox(height: 16,),
-                              //Container(
-                                //child:
-                                 Card(
+                                            
+                                        ),],),
+                                      ),
+                                      SizedBox(height: 16,),
+                                      //Container(
+                                        //child:
+                                         Card(
   elevation: 4,
   child: Padding(
     padding: const EdgeInsets.all(8.0),
@@ -478,17 +536,17 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                 return DataRow(cells: [
                   DataCell(Row(
                     children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: entry['DrawerColor'],
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      Text(key),
-                      // Adjust the width as needed
+                              Container(
+                                width: 10,
+                                height: 10,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: entry['DrawerColor'],
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Text(key),
+                              // Adjust the width as needed
                     ],
                   )),
                   DataCell(Text(value.toStringAsFixed(1))),
@@ -503,8 +561,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   ),
 ),
 
-                                 //)
-                                 Card(
+                                         //)
+                                         Card(
   elevation: 4,
   child: Padding(
     padding: const EdgeInsets.all(8.0),
@@ -556,20 +614,20 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                 return DataRow(
                   cells: [
                     DataCell(
-                      Row(
-                        children: [
-                          Container(
-                            width: 10,
-                            height: 10,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: entry['DrawerColor'],
-                            ),
-                          ),
-                          SizedBox(width: 5),
-                          Text(key),
-                        ],
-                      ),
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 10,
+                                    height: 10,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: entry['DrawerColor'],
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(key),
+                                ],
+                              ),
                     ),
                     DataCell(Text(value.toStringAsFixed(2))),
                     DataCell(Text(_number.toString())),
@@ -584,9 +642,9 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   ),
 ),
 
-                                 SizedBox(height: 16,),
-                              
-                             Padding(
+                                         SizedBox(height: 16,),
+                                      
+                                     Padding(
   padding: const EdgeInsets.all(0.0),
   // child: SizedBox(
   //   height: 1000,
@@ -629,63 +687,63 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                  child: Container(
                   height: 100,
                   child: buildLineChart(widget.DepartmentData4?['rcount']),
-                             ),
+                                     ),
                ),
             
             Padding(
-                                   padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
-                                   child: Container(
-                                    
-                                    child: DataTable(
-                                      columnSpacing: 10.0,
-                                      dataRowHeight: 30,
-                                      horizontalMargin: 0,
-                                   columns: [
-                                     DataColumn(label: Center(child: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
-                                     DataColumn(label: SizedBox(width: 50,child: Padding(
-                                       padding: const EdgeInsets.only(top:8.0),
-                                       child: Column(
-                                         children: [
-                                           Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
-                                           Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
-                                         ],
-                                       ),
-                                     ))),
-                                     DataColumn(label: Text('Qty')),
-                                     DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12))),
-                                   ],
-                                   rows: widget.DepartmentData4?['hourlysaleslist'].map<DataRow>((entry) {
-                                     String key = entry['Time_Desc'];
-                                     int value = entry['Receipt'];
-                                     double _number = entry['Qty'];
-                                     double _number1 = entry['Amount']; // Assuming these are the additional numbers you want to display
-                                     //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
-                                 
-                                     // Create a DataRow for the key and value
-                                     return DataRow(cells: [
-                                       DataCell(Row(
-                                         children: [
-                                           Container(
-                                             width: 10,
-                                             height: 10,
-                                             
-                                             decoration: BoxDecoration(
-                                     shape: BoxShape.circle,
-                                     color: entry['DrawerColor'],
-                                   ),
+                                           padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
+                                           child: Container(
+                                            
+                                            child: DataTable(
+                                              columnSpacing: 10.0,
+                                              dataRowHeight: 30,
+                                              horizontalMargin: 0,
+                                           columns: [
+                                             DataColumn(label: Center(child: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
+                                             DataColumn(label: SizedBox(width: 50,child: Padding(
+                                               padding: const EdgeInsets.only(top:8.0),
+                                               child: Column(
+                                                 children: [
+                                                   Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
+                                                   Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
+                                                 ],
+                                               ),
+                                             ))),
+                                             DataColumn(label: Text('Qty')),
+                                             DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12))),
+                                           ],
+                                           rows: widget.DepartmentData4?['hourlysaleslist'].map<DataRow>((entry) {
+                                             String key = entry['Time_Desc'];
+                                             int value = entry['Receipt'];
+                                             double _number = entry['Qty'];
+                                             double _number1 = entry['Amount']; // Assuming these are the additional numbers you want to display
+                                             //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
+                                         
+                                             // Create a DataRow for the key and value
+                                             return DataRow(cells: [
+                                               DataCell(Row(
+                                                 children: [
+                                                   Container(
+                                                     width: 10,
+                                                     height: 10,
+                                                     
+                                                     decoration: BoxDecoration(
+                                             shape: BoxShape.circle,
+                                             color: entry['DrawerColor'],
                                            ),
-                                           SizedBox(width: 5),
-                                           SizedBox(width: 135,child: Text(key,style: TextStyle(fontSize: 14))),
-                                           // Adjust the width as needed
-                                         ],
-                                       )),
-                                       DataCell(Center(child: Text(value.toString()))),
-                                       DataCell(Text(_number.toString())),
-                                       DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
-                                     ]);
-                                   }).toList(),
-                                 ), ),
-                                 ),
+                                                   ),
+                                                   SizedBox(width: 5),
+                                                   SizedBox(width: 135,child: Text(key,style: TextStyle(fontSize: 14))),
+                                                   // Adjust the width as needed
+                                                 ],
+                                               )),
+                                               DataCell(Center(child: Text(value.toString()))),
+                                               DataCell(Text(_number.toString())),
+                                               DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
+                                             ]);
+                                           }).toList(),
+                                         ), ),
+                                         ),
           ],
         ),
       ),
@@ -693,10 +751,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   
 ),
          SizedBox(height: 16,),
-                                 
-                                //  SizedBox(height: 16,),
-                              
-                             Padding(
+                                         
+                                        //  SizedBox(height: 16,),
+                                      
+                                     Padding(
   padding: const EdgeInsets.all(0.0),
   // child: SizedBox(
   //   height: 800,
@@ -728,59 +786,59 @@ String monthName = DateFormat('MMM').format(DateTime.now());
               //),
             ),
             Padding(
-                                   padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
-                                   child: Container(
-                                    
-                                    child: DataTable(
-                                      columnSpacing: 30.0,
-                                      dataRowHeight: 30,
-                                      horizontalMargin: 0,
-                                   columns: [
-                                     DataColumn(label: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)))),
-                                    //  DataColumn(label: SizedBox(width: 50,child: Padding(
-                                    //    padding: const EdgeInsets.only(top:8.0),
-                                    //    child: Column(
-                                    //      children: [
-                                    //        Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
-                                    //        Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
-                                    //      ],
-                                    //    ),
-                                    //  ))),
-                                     DataColumn(label: Text('Qty')),
-                                     DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12))),
-                                   ],
-                                   rows: widget.DepartmentData5?['TotalBucketBilllist'].map<DataRow>((entry) {
-                                     String key = entry['Column1'];
-                                     //int value = entry['Column1'];
-                                     int _number = entry['BillCount'];
-                                     double _number1 = entry['Amount']; // Assuming these are the additional numbers you want to display
-                                     //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
-                                 
-                                     // Create a DataRow for the key and value
-                                     return DataRow(cells: [
-                                       DataCell(Row(
-                                         children: [
-                                           Container(
-                                             width: 10,
-                                             height: 10,
-                                             
-                                             decoration: BoxDecoration(
-                                     shape: BoxShape.circle,
-                                     color: entry['DrawerColor'],
-                                   ),
+                                           padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
+                                           child: Container(
+                                            
+                                            child: DataTable(
+                                              columnSpacing: 30.0,
+                                              dataRowHeight: 30,
+                                              horizontalMargin: 0,
+                                           columns: [
+                                             DataColumn(label: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)))),
+                                            //  DataColumn(label: SizedBox(width: 50,child: Padding(
+                                            //    padding: const EdgeInsets.only(top:8.0),
+                                            //    child: Column(
+                                            //      children: [
+                                            //        Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
+                                            //        Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)),
+                                            //      ],
+                                            //    ),
+                                            //  ))),
+                                             DataColumn(label: Text('Qty')),
+                                             DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12))),
+                                           ],
+                                           rows: widget.DepartmentData5?['TotalBucketBilllist'].map<DataRow>((entry) {
+                                             String key = entry['Column1'];
+                                             //int value = entry['Column1'];
+                                             int _number = entry['BillCount'];
+                                             double _number1 = entry['Amount']; // Assuming these are the additional numbers you want to display
+                                             //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
+                                         
+                                             // Create a DataRow for the key and value
+                                             return DataRow(cells: [
+                                               DataCell(Row(
+                                                 children: [
+                                                   Container(
+                                                     width: 10,
+                                                     height: 10,
+                                                     
+                                                     decoration: BoxDecoration(
+                                             shape: BoxShape.circle,
+                                             color: entry['DrawerColor'],
                                            ),
-                                           SizedBox(width: 5),
-                                           SizedBox(width: 130,child: Text(key,style: TextStyle(fontSize: 14),textAlign: TextAlign.start,)),
-                                           // Adjust the width as needed
-                                         ],
-                                       )),
-                                       //DataCell(Center(child: Text(value.toString()))),
-                                       DataCell(SizedBox(width: 30,child: Text(_number.toString()))),
-                                       DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
-                                     ]);
-                                   }).toList(),
-                                 ), ),
-                                 ),
+                                                   ),
+                                                   SizedBox(width: 5),
+                                                   SizedBox(width: 130,child: Text(key,style: TextStyle(fontSize: 14),textAlign: TextAlign.start,)),
+                                                   // Adjust the width as needed
+                                                 ],
+                                               )),
+                                               //DataCell(Center(child: Text(value.toString()))),
+                                               DataCell(SizedBox(width: 30,child: Text(_number.toString()))),
+                                               DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
+                                             ]);
+                                           }).toList(),
+                                         ), ),
+                                         ),
           ],
         ),
       ),
@@ -788,10 +846,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   
 ),
         
-                                 
-                                
-                              SizedBox(height: 16,),
-                              Card(
+                                         
+                                        
+                                      SizedBox(height: 16,),
+                                      Card(
   elevation: 4,
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -813,174 +871,179 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
       ),
       Padding(
-                                   padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
-                                   child: Container(
-                                    
-                                    child: DataTable(
-                                      columnSpacing: 160.0,
-                                      dataRowHeight: 30,
-                                      horizontalMargin: 8,
-                                   columns: [
-                                     DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Bill Date',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
-                                    //  
-                                     DataColumn(label: SizedBox(child: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
-                                   ],
-                                   rows: widget.DepartmentData6?['monthlylist'].map<DataRow>((entry) {
-                                     
-                                     String _number = entry['x'];
-                                     double _number1 = entry['y']; // Assuming these are the additional numbers you want to display
-                                     //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
-                                 
-                                     // Create a DataRow for the key and value
-                                     return DataRow(cells: [
-                                  //      
-                                       DataCell(Center(child: Text(_number.toString()))),
-                                       DataCell( Text(_number1.toStringAsFixed(2),)),
-                                     ]);
-                                   }).toList(),
-                                 ), ),
-                                 ),
+                                           padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
+                                           child: Container(
+                                            
+                                            child: DataTable(
+                                              columnSpacing: 160.0,
+                                              dataRowHeight: 30,
+                                              horizontalMargin: 8,
+                                           columns: [
+                                             DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Bill Date',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
+                                            //  
+                                             DataColumn(label: SizedBox(child: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
+                                           ],
+                                           rows: widget.DepartmentData6?['monthlylist'].map<DataRow>((entry) {
+                                             
+                                             String _number = entry['x'];
+                                             double _number1 = entry['y']; // Assuming these are the additional numbers you want to display
+                                             //double _number1 = double.parse(formatter.format(entry['Contibution'])); // Assuming these are the additional numbers you want to display
+                                         
+                                             // Create a DataRow for the key and value
+                                             return DataRow(cells: [
+                                          //      
+                                               DataCell(Center(child: Text(_number.toString()))),
+                                               DataCell( Text(_number1.toStringAsFixed(2),)),
+                                             ]);
+                                           }).toList(),
+                                         ), ),
+                                         ),
     ],
   ),
 ),
 
-                              SizedBox(height: 16,),
-                              Card(
-                                elevation: 3,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    
-                                   child: Column(
-                                              //mainAxisSize: MainAxisSize.max,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
+                                      SizedBox(height: 16,),
+                                      Card(
+                                        elevation: 3,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            
+                                           child: Column(
+                                                      //mainAxisSize: MainAxisSize.max,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Center(child: Padding(
+                                                          padding: const EdgeInsets.only(bottom:8.0),
+                                                          child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                                        )),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text('Net sales: '),
+                                                            Text('${widget.DepartmentData1?['netsale']}')
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text('Cas Refund: '),
+                                                            Text('${widget.DepartmentData1?['cashrefund']}')
+                                                          ],
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text('Cash Sales: '),
+                                                            Text('${widget.DepartmentData1?['cashsales']}')
+                                                          ],
+                                                        ),
+                                                        Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Customer credit:'),
+                                              Text('${widget.DepartmentData1?['customercredit']}'),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Customer count:'),
+                                              Text('${widget.DepartmentData1?['customercount']}'),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Non cash sales:'),
+                                              Text('${widget.DepartmentData1?['noncashsales']}'),
+                                            ],
+                                          ),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text('Cash out:'),
+                                              Text('${widget.DepartmentData1?['CashOut']}'),
+                                            ],
+                                          ),
+                                                      ],
+                                                    ),
+                                          //           child:ListView.builder(
+                                          //   itemCount: currentSales.length,
+                                          //   itemBuilder: (context, index) {
+                                          //     return ListTile(
+                                          //       Text('Net sales: ${net}'),
+                                          //               Text('Cas Refund: ${cr}'),
+                                          //               Text('Cash Sales: ${cs}'),
+                                          //               Text('Discount: ${ds}'),
+                                          //               Text('Credit sales: ${cds}'),
+                                          //               Text('Credit Refund: ${cds}'),
+                                          //               Text('DB Name: ${db}'),
+                                          //     );
+                                          //   },
+                                          // );
+                                            //),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(height: 16,),
+                                      Card(
+                                        elevation: 3,
+                                        child: Padding(
+                                             padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
+                                             child: Column(
+                                               children: [
                                                 Center(child: Padding(
-                                                  padding: const EdgeInsets.only(bottom:8.0),
-                                                  child: Text("Current Sales",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                                )),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Net sales: '),
-                                                    Text('${widget.DepartmentData1?['netsale']}')
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Cas Refund: '),
-                                                    Text('${widget.DepartmentData1?['cashrefund']}')
-                                                  ],
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    Text('Cash Sales: '),
-                                                    Text('${widget.DepartmentData1?['cashsales']}')
-                                                  ],
-                                                ),
-                                                Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Customer credit:'),
-                                      Text('${widget.DepartmentData1?['customercredit']}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Customer count:'),
-                                      Text('${widget.DepartmentData1?['customercount']}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Non cash sales:'),
-                                      Text('${widget.DepartmentData1?['noncashsales']}'),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('Cash out:'),
-                                      Text('${widget.DepartmentData1?['CashOut']}'),
-                                    ],
-                                  ),
-                                              ],
-                                            ),
-                                  //           child:ListView.builder(
-                                  //   itemCount: currentSales.length,
-                                  //   itemBuilder: (context, index) {
-                                  //     return ListTile(
-                                  //       Text('Net sales: ${net}'),
-                                  //               Text('Cas Refund: ${cr}'),
-                                  //               Text('Cash Sales: ${cs}'),
-                                  //               Text('Discount: ${ds}'),
-                                  //               Text('Credit sales: ${cds}'),
-                                  //               Text('Credit Refund: ${cds}'),
-                                  //               Text('DB Name: ${db}'),
-                                  //     );
-                                  //   },
-                                  // );
-                                    //),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 16,),
-                              Card(
-                                elevation: 3,
-                                child: Padding(
-                                     padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
-                                     child: Column(
-                                       children: [
-                                        Center(child: Padding(
-                                                  padding: const EdgeInsets.only(bottom:8.0),
-                                                  child: Text("Last 96 Bills",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                                                )),
-                                         Container(
-                                          
-                                          
-                                          child: DataTable(
-                                            columnSpacing: 30.0,
-                                            dataRowHeight: 30,
-                                            horizontalMargin: 0,
-                                         columns: [
-                                           DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
-                                          DataColumn(label: Center(child: Text('Time',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
-                                          DataColumn(label: Center(child: Text('Unit',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))), 
-                                           DataColumn(label: Center(child: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
-                                         ],
-                                         rows: widget.DepartmentData7?['LastBilllist'].map<DataRow>((entry) {
-                                           
-                                           String _number = entry['Receipt_No'];
-                                           String _number1 = entry['Tr_Date']; // Assuming these are the additional numbers you want to display
-                                           String _number2 = entry['Unit']; // Assuming these are the additional numbers you want to display
-                                           double _number3 = entry['Amount'];
-                                           // Create a DataRow for the key and value
-                                           return DataRow(cells: [
-                                    //      
-                                             DataCell(Center(child: Text(_number.toString()))),
-                                             DataCell(SizedBox(width: 70,child: Center(child: Text(_number1.toString())))),
-                                             DataCell(Center(child: Text(_number2.toString()))),
-                                             DataCell(Center(child: Text(_number3.toString()))),
-                                           ]);
-                                         }).toList(),
-                                   ), ),
-                                       ],
-                                     ),
-                                   ),
-                              ), 
-                              ]
-                            
-                          ) 
-                          )
+                                                          padding: const EdgeInsets.only(bottom:8.0),
+                                                          child: Text("Last 96 Bills",style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                                                        )),
+                                                 Container(
+                                                  
+                                                  
+                                                  child: DataTable(
+                                                    columnSpacing: 30.0,
+                                                    dataRowHeight: 30,
+                                                    horizontalMargin: 0,
+                                                 columns: [
+                                                   DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Reciept',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
+                                                  DataColumn(label: Center(child: Text('Time',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
+                                                  DataColumn(label: Center(child: Text('Unit',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))), 
+                                                   DataColumn(label: Center(child: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
+                                                 ],
+                                                 rows: widget.DepartmentData7?['LastBilllist'].map<DataRow>((entry) {
+                                                   
+                                                   String _number = entry['Receipt_No'];
+                                                   String _number1 = entry['Tr_Date']; // Assuming these are the additional numbers you want to display
+                                                   String _number2 = entry['Unit']; // Assuming these are the additional numbers you want to display
+                                                   double _number3 = entry['Amount'];
+                                                   // Create a DataRow for the key and value
+                                                   return DataRow(cells: [
+                                            //      
+                                                     DataCell(Center(child: Text(_number.toString()))),
+                                                     DataCell(SizedBox(width: 70,child: Center(child: Text(_number1.toString())))),
+                                                     DataCell(Center(child: Text(_number2.toString()))),
+                                                     DataCell(Center(child: Text(_number3.toString()))),
+                                                   ]);
+                                                 }).toList(),
+                                           ), ),
+                                               ],
+                                             ),
+                                           ),
+                                      ), 
+                                      ]
+                                    
+                                  ) 
+                                  )
                     
+                              ),
+                            ],
+                            )
+                          ),
+                        ],
                       ),
                     //),
                     //]
-                  ),
+                  //),
                 ),
               //],
             ),
@@ -1092,9 +1155,10 @@ Widget buildPieChart(List departmentData) {
   
   return PieChart(
     PieChartData(
-      sections: List.generate(departmentData!.length, (index) {
-        double value = (index+1)*10;
-        final istouched = index == touchedindx;
+      sections: departmentData != null?
+      List.generate(departmentData!.length, (index) {
+        // double value = (index+1)*10;
+        // final istouched = index == touchedindx;
         
         final sectionData = departmentData![index];
         //double radius = ;
@@ -1104,7 +1168,7 @@ Widget buildPieChart(List departmentData) {
           title: sectionData.title,
           radius: sectionData.radius
         );
-      }).toList(),
+      }).toList():[],
       pieTouchData: PieTouchData(
         touchCallback: (FlTouchEvent event,pieTouchResponse){
           setState(() {
