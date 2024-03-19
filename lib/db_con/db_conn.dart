@@ -350,6 +350,7 @@ Future<bool> doesUrlExist() async {
       // An error occurred during the request, print the error
       print('Error: $e');
       showAlert();
+      throw e;
     }
 
 
@@ -372,7 +373,7 @@ Future<bool> doesUrlExist() async {
       '',
       '',
       '',
-      '${mac_id}',
+      '${imei}',
       '',
       '',
       '',
@@ -402,13 +403,13 @@ Future<bool> doesUrlExist() async {
       if (responseData['CommonResult']['Table'] != null) {
   //(responseData['CommonResult']['Table'] as List).forEach((element) {
      sale = {
-      'netsale': double.parse(responseData['CommonResult']['Table'][0]['NetSales']).toStringAsFixed(2),
-       'cashsales': double.parse(responseData['CommonResult']['Table'][0]['CashSales']).toStringAsFixed(2),
-       'noncashsales': responseData['CommonResult']['Table'][0]['CreditSales'],
-      'customercount': responseData['CommonResult']['Table'][0]['NoOfCustomer'],
-      'avgbill': double.parse(responseData['CommonResult']['Table'][0]['AVGBill']).toStringAsFixed(2),
-      'cashrefund': responseData['CommonResult']['Table'][0]['CashRefund'],
-      'cashout': double.parse(responseData['CommonResult']['Table'][0]['CashOut']).toStringAsFixed(2),
+      'netsale': double.parse(responseData['CommonResult']['Table'][0]['NetSales'] ?? '0').toStringAsFixed(2),
+       'cashsales': double.parse(responseData['CommonResult']['Table'][0]['CashSales']?? '0').toStringAsFixed(2),
+       'noncashsales': double.parse(responseData['CommonResult']['Table'][0]['CreditSales']?? '0').toStringAsFixed(2),
+      'customercount': responseData['CommonResult']['Table'][0]['NoOfCustomer']??'0',
+      'avgbill': double.parse(responseData['CommonResult']['Table'][0]['AVGBill']?? '0').toStringAsFixed(2),
+      'cashrefund': double.parse(responseData['CommonResult']['Table'][0]['CashRefund']?? '0').toStringAsFixed(2),
+      'cashout': double.parse(responseData['CommonResult']['Table'][0]['CashOut']?? '0').toStringAsFixed(2),
       
       'customercredit': responseData['CommonResult']['Table'][0]['CustomerCredit'],
      };
@@ -435,6 +436,7 @@ Future<bool> doesUrlExist() async {
   catch (e) {
     // Handle exceptions
     print('Exception:n $e');showAlert();
+    throw e;
 
   }
     }
@@ -504,6 +506,7 @@ for (var element in names) {
     // Handle exceptions
     print('Exception: $e');
     showAlert();
+    throw e;
   }
 }
 
@@ -523,7 +526,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      '${imei}',
       '',
       '',
       '',
@@ -559,7 +562,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
    double nettotal=0;
    double aa=0;
 
-   if (responseData['CommonResult']['Table'] != null) {
+   if (responseData['CommonResult']['Table'] != null && responseData['CommonResult']['Table'].isNotEmpty) {
         if (responseData['CommonResult']['Table'][0] != null) {
           discount = responseData['CommonResult']['Table'][0]['Discount'];
           nettotal = responseData['CommonResult']['Table'][0]['NetTotal'];
@@ -626,6 +629,7 @@ print('d:${DepartmentData['departmetlist']}');
     // Handle exceptions
     print('Exception:a $e');
     showAlert();
+    throw e;
   }
     }
 Future<void> loadpaymentPieChartData({date,loca,imei}) async {
@@ -644,7 +648,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -718,6 +722,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\p $e');
      showAlert();
+     throw e;
     }
 }
 Future<void> LoadUnitWiseData({date,loca,imei}) async {
@@ -736,7 +741,7 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -815,6 +820,7 @@ print('table srt');
     catch(e){
      print('Exception:a\pn $e');
      showAlert();
+     throw e;
     }
 }
 
@@ -834,7 +840,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -951,6 +957,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\pn $e');
      showAlert();
+     throw e;
     }
 }
 
@@ -970,7 +977,7 @@ Future<void> LoadBucketData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -1082,6 +1089,7 @@ Future<void> LoadBucketData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\pn $e');
      showAlert();
+     throw e;
     }
 }
 
@@ -1101,7 +1109,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -1209,6 +1217,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\pn $e');
      showAlert();
+     throw e;
     }
 }
 
@@ -1228,7 +1237,7 @@ Future<void> loadLastBillData({date,loca,imei}) async {
       '',
       '',
       '',
-      '4988b924cfe11070',
+      imei,
       '',
       '',
       '',
@@ -1295,6 +1304,7 @@ Future<void> loadLastBillData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\pn $e');
      showAlert();
+     throw e;
     }
 }
 

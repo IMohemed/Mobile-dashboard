@@ -33,7 +33,7 @@ class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with Chan
   
   bool _isCalendarEnabled = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  
+ late Timer _timer;
   String? _selectedDay;
   ApiService api = ApiService();
   DateTime now =DateTime.now() ;
@@ -41,6 +41,12 @@ class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with Chan
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
+@override
+void dispose() {
+  // Cancel the timer to avoid calling setState() after the widget is disposed
+  _timer?.cancel();
+  super.dispose();
+}
 void enableCalendar() {
   setState(() {
     _isCalendarEnabled = true;
@@ -254,7 +260,8 @@ void enableCalendar() {
       _isCalendarEnabled = false;
     });
     print(_selectedDay);
-     Timer(Duration(seconds: 40), () {
+    _timer?.cancel();
+     _timer =Timer(Duration(seconds: 40), () {
     setState(() {
       _isCalendarEnabled = true;
     });

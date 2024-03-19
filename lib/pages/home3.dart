@@ -38,7 +38,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMixin{
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int touchedindx = 0;
-  NumberFormat formatter = NumberFormat('#,##0.0', 'en_US');
+  NumberFormat formatter = NumberFormat('#,##0.00', 'en_US');
   List<Color> gradientColors = [
    Color.fromARGB(255, 235, 36, 36),
     Color.fromARGB(255, 179, 37, 66),
@@ -202,7 +202,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   children: [
                     Text('LKR ', // Format the number as needed
                                 style: TextStyle(fontSize: 40,color: Colors.white,),),
-                    Text(NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['netsale'] ?? '0' ) ),style: TextStyle(fontSize: 40,color: Colors.white,))
+                    Text(NumberFormat("#,##0.00").format(double.parse(widget.DepartmentData1?['netsale'] ?? '0.00' ) ),style: TextStyle(fontSize: 40,color: Colors.white,))
                   ],
                 ), // Set the color of the section
               ),
@@ -258,7 +258,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['cashsales'] ?? '0'))}',
+        text: '${NumberFormat("#,##0.00").format(double.parse(widget.DepartmentData1?['cashsales'] ?? '0.00'))}',
         style: TextStyle(fontSize: 17, color: Colors.blue),
       ),
     ],
@@ -282,7 +282,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
       TextSpan(
-        text: '${NumberFormat("#,###.##").format(double.parse(widget.DepartmentData1?['noncashsales'] ?? '0'))}',
+        text: '${NumberFormat("#,##0.00").format(double.parse(widget.DepartmentData1?['noncashsales'] ?? '0.00'))}',
         style: TextStyle(fontSize: 17, color: Colors.red),
       ),
     ],
@@ -374,13 +374,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                             
                                             child: DataTable(
                                               dataRowHeight: 30,
-                                              columnSpacing: 10.0,
+                                              columnSpacing: 30.0,
                                               horizontalMargin: 0,
                                         columns: [
                                           DataColumn(label: Text('Department',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
                                           DataColumn(label: Text('%',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
                                           DataColumn(label: Text('Qty',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                          DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
+                                          DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)),
                                         ],
                                         rows: widget.DepartmentData?['departmetlist'].map<DataRow>((entry) {
                                           String key = entry['Dept_Name'];
@@ -402,13 +402,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                         ),
                                                 ),
                                                 SizedBox(width: 5),
-                                                SizedBox(width: 110,child: Text(key)),
+                                                SizedBox(width: 80,child: Text(key)),
                                                 // Adjust the width as needed
                                               ],
                                             )),
-                                            DataCell(SizedBox(width: 40,child: Text(_number1.toString()))),
-                                            DataCell(SizedBox(width: 60,child: Text(value.toString()))),
-                                            DataCell(Text(_number.toString())),
+                                            DataCell(SizedBox(child: Text(_number1.toString()))),
+                                            DataCell(SizedBox(child: Text(value.toString(),textAlign: TextAlign.right))),
+                                            DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right)),),
                                           ]);
                                         }).toList(),
                                       ),
@@ -549,8 +549,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               // Adjust the width as needed
                     ],
                   )),
-                  DataCell(Text(value.toStringAsFixed(1))),
-                  DataCell(Text(_number.toString())),
+                  DataCell(Text(value.toStringAsFixed(1),textAlign: TextAlign.right)),
+                  DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                 ]);
               }).toList(),
             ),
@@ -600,9 +600,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   ),
                 ),
                 DataColumn(
-                  label: Text(
-                    'Amount',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  label: Center(
+                    child: Text(
+                      'Amount',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
                   ),
                 ),
               ],
@@ -630,7 +632,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               ),
                     ),
                     DataCell(Text(value.toStringAsFixed(2))),
-                    DataCell(Text(_number.toString())),
+                    DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                   ],
                 );
               }).toList(),
@@ -739,7 +741,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                )),
                                                DataCell(Center(child: Text(value.toString()))),
                                                DataCell(Text(_number.toString())),
-                                               DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
+                                               DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number1).toString(),textAlign: TextAlign.right,))),
                                              ]);
                                            }).toList(),
                                          ), ),
@@ -833,8 +835,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                  ],
                                                )),
                                                //DataCell(Center(child: Text(value.toString()))),
-                                               DataCell(SizedBox(width: 30,child: Text(_number.toString()))),
-                                               DataCell(Text(_number1.toString(),textAlign: TextAlign.right,)),
+                                               DataCell(SizedBox(width: 20,child: Text(_number.toString(),textAlign: TextAlign.right))),
+                                               DataCell(SizedBox(width: 45,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right,))),
                                              ]);
                                            }).toList(),
                                          ), ),
@@ -893,7 +895,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                              return DataRow(cells: [
                                           //      
                                                DataCell(Center(child: Text(_number.toString()))),
-                                               DataCell( Text(_number1.toStringAsFixed(2),)),
+                                               DataCell( SizedBox(width: 70,child: Text(NumberFormat("#,##0.00").format(_number1).toString(),textAlign: TextAlign.right,))),
                                              ]);
                                            }).toList(),
                                          ), ),
@@ -941,8 +943,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                         Row(
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text('Customer credit:'),
-                                              Text('${widget.DepartmentData1?['customercredit']}'),
+                                              Text('Average bill value:'),
+                                              Text('${widget.DepartmentData1?['avgbill']}'),
                                             ],
                                           ),
                                           Row(
@@ -963,7 +965,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Text('Cash out:'),
-                                              Text('${widget.DepartmentData1?['CashOut']}'),
+                                              Text('${widget.DepartmentData1?['cashout']}'),
                                             ],
                                           ),
                                                       ],
@@ -1022,7 +1024,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                      DataCell(Center(child: Text(_number.toString()))),
                                                      DataCell(SizedBox(width: 70,child: Center(child: Text(_number1.toString())))),
                                                      DataCell(Center(child: Text(_number2.toString()))),
-                                                     DataCell(Center(child: Text(_number3.toString()))),
+                                                     DataCell(Center(child: SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number3).toString(),textAlign: TextAlign.right,)))),
                                                    ]);
                                                  }).toList(),
                                            ), ),
