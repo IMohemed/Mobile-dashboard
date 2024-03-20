@@ -17,7 +17,8 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
-class _LoginState extends State<Login> {
+class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
+  bool isloading = false;
   ApiService api = ApiService();
   localDB local=localDB();
   String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    //_getImei();
+    
     
   }
   
@@ -101,7 +102,11 @@ class _LoginState extends State<Login> {
   ),
                   
                   onPressed: () async{
+                    setState(() {
+                      isloading=true;
+                    });
                     // Add your login logic here
+
                     bool idExists = await api.doesUrlExist();
                     if(password.text == "8080" )
                     {
@@ -130,6 +135,7 @@ class _LoginState extends State<Login> {
                       if(data3['CommonResult']['Table'][0]['ReturnMSGIMEI'] == "T")
                       {
                         _getImei(date1); 
+                        
                         //Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo()),);
 
                        //}
@@ -146,7 +152,18 @@ class _LoginState extends State<Login> {
                 ),
               );}
                   },
-                  child: Text('Login',),
+                  child:isloading?
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: Colors.white,
+                      ),
+                      const SizedBox(width: 24,),
+                       Text("Please wait...")
+                    ],
+                  )
+                  : Text('Login',),
                   
                 ),  
               ],
@@ -190,7 +207,7 @@ class _LoginState extends State<Login> {
           departmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
           Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,)),);
-          
+          isloading = false;
         });
         
          
