@@ -8,7 +8,7 @@ import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/locs.dart';
 import 'package:intl/intl.dart';
-
+bool? _isloading = true;
  GlobalKey<_LoginState> _loginKey = GlobalKey<_LoginState>();
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -23,7 +23,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   localDB local=localDB();
   String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String mei ='';
-  String? loc,loc1;
+  String? loc,loc1,locNa;
   Map<String, dynamic>  departmentData={};
   Map<String, dynamic>  departmentData1={};
   Map<String, dynamic>  departmentData2={};
@@ -179,11 +179,13 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       //if (!mounted) return;
       setState(() {
+        _isloading=true;
         mei = androidInfo.androidId; 
         });// Using androidId as an example, you might need to request permission to access the IMEI number.
         print(mei);
         await api.loadLocations(mei,date);
         loc=api.loca;
+        locNa=api.locNa;
         // loc1 = loc?.replaceAll(RegExp(r'[0-9]+'), (int.parse(loc!.replaceAll(RegExp(r'[^0-9]'), '')) + 1).toString());
         // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date,loca:loc,imei:mei);
@@ -206,8 +208,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
           departmentData6 = api.MonthlyData;
           departmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
-          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,)),);
-          isloading = false;
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,)),);
+          // isloading = false;
         });
         
          

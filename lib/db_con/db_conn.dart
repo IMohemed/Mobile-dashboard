@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/main.dart';
@@ -17,45 +18,29 @@ class ApiService extends ChangeNotifier{
   String storedUrl1="api.salesup3.onimtaitsl.com";
 
  String url = '';
-      var loca;
+      var loca,locNa;
       List<Color> color = [
-    Color(0xFFD95AF3), // Purple
-  Color(0xFF5AF37E), // Green
-  Color(0xFF5AAEF3),
-  Color(0xFFF3A75A), 
-  Color(0xFFFF6E40),
- Color(0xFFD95AF3), // Purple
- Color(0xFF5AF37E), // Green
-  Color(0xFF5AAEF3), // Blue
-   // Orange
-  Color(0xFF5A7BF3), // Light Blue
-   // Deep Orange
-  Color(0xFF8E24AA), // Purple
-  Color(0xFF9C27B0), // Violet
-  Color(0xFFE91E63), // Pink
-  Color(0xFFF06292), // Light Pink
- Color(0xFF607D8B), // Blue Grey
-  Color(0xFFFF5722), // Deep Orange
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), // Grey
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  Color(0xFF795548), // Brown
-  Color(0xFF9E9E9E), 
-  ];
+        Color.fromARGB(255, 160, 104, 19),    
+  const Color.fromARGB(255, 55, 138, 57),
+  const Color.fromARGB(255, 181, 55, 46),
+  Colors.purple,
+  const Color.fromARGB(255, 180, 167, 49),
+  Colors.teal,
+  Color.fromARGB(255, 28, 54, 183),
+  Colors.indigo,
+  Color.fromARGB(255, 162, 36, 78),
+  Color.fromARGB(255, 161, 132, 47),
+  Colors.cyan,
+  Colors.deepPurple,
+  Colors.deepOrange,
+  Colors.lime,
+  Colors.lightBlue,
+  Colors.lightGreen,
+  Colors.brown,
+  Colors.grey,
+  Colors.blueGrey,
+  Colors.black,];
+  
   PieChartData chartData = PieChartData();
  Map<String, dynamic> DepartmentData = {};
  Map<String, dynamic> UnitWiseData = {};
@@ -475,12 +460,15 @@ Future<bool> doesUrlExist() async {
 
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
+      print(json);
       List<dynamic> names = [];
       json['CommonResult']['Table'].forEach((element) {
         names.add(element);
       });
       names.forEach((element) {
-   loca = element['Loca']; // Accessing 'Loca' property using bracket notation
+   loca = element['Loca'];
+   locNa = element['Loca_name'];
+    // Accessing 'Loca' property using bracket notation
   // Do something with loca
 });
 
@@ -677,6 +665,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       print(date+loca);
       int i = 0;
     double total=0;
+    int listSize = responseData['CommonResult']['Table'].length;
     List<Map<String, dynamic>> piedata = [];
     List<Map<String, dynamic>> paymentmethodlist = [];
 
@@ -695,7 +684,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
           'Amount': piem['Amount'],
         });
         i+=1;
-        //total += double.parse(piem['Amount']);
+        total += piem['Amount'];
         
       });
     }
@@ -713,8 +702,8 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
      PaymentData = {
           'paymentpiedate': chartData.sections,
           'paymenttypelist': paymentmethodlist,
-          //'totalpaymentmethod': total,
-          //'totalpaymentmethodpqty': listsize,
+          'totalpaymentmethod': total,
+          'totalpaymentmethodpqty': listSize,
         };
         print('pay-${PaymentData['']}');
     updatePaymentData(PaymentData);
@@ -770,6 +759,7 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
       print(date+loca);
       int i = 0;
      double total=0;
+     int listSize = responseData['CommonResult']['Table'].length;
      List<Map<String, dynamic>> piedata = [];
      List<Map<String, dynamic>> unitlist = [];
 
@@ -809,8 +799,8 @@ print('table srt');
      UnitWiseData = {
           'unitpiedata': chartData.sections,
           'unittypelist': unitlist,
-          'totalpaymentmethod': total,
-          //'totalpaymentmethodpqty': listsize,
+          'totalpaymentmethod': listSize,
+          'totalpaymentmethodpqty': total,
         };
 //         print('pay-${PaymentData['']}');
      updateUnitWiseData(UnitWiseData);
@@ -899,7 +889,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
         i = i + 1;
         totalreceipt += el['Receipt'];
         
-        totalqty = totalqty + el['Qty'];
+        totalqty = totalqty + (el['Qty']);
         totalamount = totalamount + el['Amount'];
       });
     }
@@ -1080,8 +1070,8 @@ Future<void> LoadBucketData({date,loca,imei}) async {
        'BucketBillGraph': BucketBillGraph.lineBarsData,
           'BucketAmountGraph': BucketAmountGraph.lineBarsData,
           'TotalBucketBilllist': BucketBilllist,
-          // 'Billcount': totalbillcount,
-          // 'TotalBucketAmount': totalbillamount,
+          'Billcount': totalbillcount,
+          'TotalBucketAmount': totalbillamount,
     };
     print('bas${BasketData}');
     updateBasketData(BasketData);
@@ -1335,4 +1325,19 @@ void showAlert() {
   );
 }
 
+}
+List<Color> generateRandomColors(int count) {
+  List<Color> colors = [];
+  final random = Random();
+  
+  for (int i = 0; i < count; i++) {
+    Color color = Color.fromRGBO(
+      random.nextInt(256), // Red
+      random.nextInt(256), // Green
+      random.nextInt(256), // Blue
+      1.0, // Opacity
+    );
+    colors.add(color);
+  }
+  return colors;
 }

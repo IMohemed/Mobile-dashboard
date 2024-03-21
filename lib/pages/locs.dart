@@ -22,9 +22,9 @@ List<CurrentSale>? curent;
   Map<String, dynamic>?  departmentData5;
   Map<String, dynamic>?  departmentData6;
   Map<String, dynamic>?  departmentData7;
-  String? mei,loc ;
+  String? mei,loc,locNa;
 
-   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected});
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa});
   @override
   State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
 }
@@ -42,11 +42,11 @@ int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
 @override
-void dispose() {
-  // Cancel the timer to avoid calling setState() after the widget is disposed
-  _timer?.cancel();
-  super.dispose();
-}
+// void dispose() {
+//   // Cancel the timer to avoid calling setState() after the widget is disposed
+//   _timer?.cancel();
+//   super.dispose();
+// }
 void enableCalendar() {
   setState(() {
     _isCalendarEnabled = true;
@@ -141,7 +141,7 @@ void enableCalendar() {
               right: 0, 
               height: 170, // Adjust the height as needed
               child: Container(
-                color: Color.fromARGB(255, 1, 44, 108), // Set the color of the section
+                color: Color(0xFF110D5C), // Set the color of the section
               ),
             ),
             Positioned(
@@ -153,9 +153,18 @@ void enableCalendar() {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    IconButton(onPressed: (){
-                     _scaffoldKey.currentState?.openDrawer();
-                    }, icon: Icon(Icons.menu),color: Colors.white,),
+                    Row(
+                      children: [
+                        IconButton(onPressed: (){
+                         _scaffoldKey.currentState?.openDrawer();
+                        }, icon: Icon(Icons.menu),iconSize: 30,color: Colors.white,),
+                        Padding(
+                          padding: const EdgeInsets.only(left:8.0),
+                          child: Text(widget.locNa!,style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
+                        )
+                      ],
+                    ),
+                    
                     Row(
                       children: [
                         IconButton(onPressed: _isCalendarEnabled
@@ -260,7 +269,7 @@ void enableCalendar() {
       _isCalendarEnabled = false;
     });
     print(_selectedDay);
-    _timer?.cancel();
+    //_timer?.cancel();
      _timer =Timer(Duration(seconds: 40), () {
     setState(() {
       _isCalendarEnabled = true;

@@ -136,12 +136,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             top: 0,
             left: 0,
             right: 0, 
-            height: 150, // Adjust the height as needed
+            height: 190, // Adjust the height as needed
             //  SliverPadding(
             //   padding: const EdgeInsets.all(8.0),
             //   sliver: SliverToBoxAdapter(
                 child: Container(
-                  color: Color.fromARGB(255, 1, 44, 108), // Set the color of the section
+                   color: Color(0xFF110D5C), // Set the color of the section
+                  
                 ),
             //   ),
             // ),
@@ -233,20 +234,23 @@ String monthName = DateFormat('MMM').format(DateTime.now());
 
           // Content card overlapping the border of the color
           Positioned(
-            top: 110, // Adjust the top position to overlap with the border
-            left: 20,
-            right: 20,
+            top: 140, // Adjust the top position to overlap with the border
+            left: 30,
+            right: 30,
             child: Card(
-              elevation: 4,
+              shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+              elevation: 1,
               child: Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(22.0),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Cash         :',
+                          'CASH:',
                           style: TextStyle(fontSize: 17),
                         ),
                         SizedBox(height: 34,),
@@ -255,11 +259,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     children: [
       TextSpan(
         text: 'LKR ',
-        style: TextStyle(fontSize: 17, color: Colors.blue),
+        style: TextStyle(fontSize: 17, color: const Color(0xFF0000FF)),
       ),
       TextSpan(
         text: '${NumberFormat("#,##0.00").format(double.parse(widget.DepartmentData1?['cashsales'] ?? '0.00'))}',
-        style: TextStyle(fontSize: 17, color: Colors.blue),
+        style: TextStyle(fontSize: 17, color: Color(0xFF0000FF)),
       ),
     ],
   ),
@@ -271,7 +275,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Non cash :',
+                          'NON CASH :',
                           style: TextStyle(fontSize: 17),
                         ),
                         Text.rich(
@@ -279,11 +283,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     children: [
       TextSpan(
         text: 'LKR ',
-        style: TextStyle(fontSize: 17, color: Colors.red),
+        style: TextStyle(fontSize: 17, color: Color(0xFFff0000)
+),
       ),
       TextSpan(
         text: '${NumberFormat("#,##0.00").format(double.parse(widget.DepartmentData1?['noncashsales'] ?? '0.00'))}',
-        style: TextStyle(fontSize: 17, color: Colors.red),
+        style: TextStyle(fontSize: 17, color: Color(0xFFff0000)
+ ),
       ),
     ],
   ),
@@ -302,11 +308,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
           SizedBox(height: 10.0,),
           //SingleChildScrollView(
             //scrollDirection: Axis.horizontal,
-             Container(
+               Container(
               child:
               // [
                 Padding(
-                  padding: const EdgeInsets.only(top: 240,left: 5,right: 5,bottom: 0),
+                  padding: const EdgeInsets.only(top: 245,left: 5,right: 5,bottom: 0),
                   //child: SingleChildScrollView(
                     //child:Card(
                        //elevation: 4,
@@ -324,7 +330,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                     children: [
                                       
                                       Card(
-                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+                                        elevation: 2,
                                         child: Column(
                                           children: [
                                             Padding(
@@ -374,13 +383,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                             
                                             child: DataTable(
                                               dataRowHeight: 30,
-                                              columnSpacing: 30.0,
+                                              columnSpacing: 25.0,
                                               horizontalMargin: 0,
                                         columns: [
                                           DataColumn(label: Text('Department',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                          DataColumn(label: Text('%',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                          DataColumn(label: Text('Qty',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
-                                          DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),)),
+                                          DataColumn(label: SizedBox(width: 30,child: Center(child: Text('%',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))))),
+                                          DataColumn(label: SizedBox(width: 35,child: Center(child: Text('Qty',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))))),
+                                          DataColumn(label: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16),textAlign: TextAlign.right)),
                                         ],
                                         rows: widget.DepartmentData?['departmetlist'].map<DataRow>((entry) {
                                           String key = entry['Dept_Name'];
@@ -393,8 +402,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                             DataCell(Row(
                                               children: [
                                                 Container(
-                                                  width: 10,
-                                                  height: 10,
+                                                  width: 15,
+                                                  height: 15,
                                                   
                                                   decoration: BoxDecoration(
                                           shape: BoxShape.circle,
@@ -402,12 +411,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                         ),
                                                 ),
                                                 SizedBox(width: 5),
-                                                SizedBox(width: 80,child: Text(key)),
+                                                SizedBox(width: 85,child: Text(key)),
                                                 // Adjust the width as needed
                                               ],
                                             )),
-                                            DataCell(SizedBox(child: Text(_number1.toString()))),
-                                            DataCell(SizedBox(child: Text(value.toString(),textAlign: TextAlign.right))),
+                                            DataCell(SizedBox(width: 37,child: Text(_number1.toString(),textAlign: TextAlign.right))),
+                                            DataCell(SizedBox(width: 38,child: Text(value.toString(),textAlign: TextAlign.right))),
                                             DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right)),),
                                           ]);
                                         }).toList(),
@@ -422,12 +431,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                       padding: const EdgeInsets.all(8.0),
                                                       child: Divider(
                                                         color: Colors.black,
-                                                        thickness: 0,
+                                                        thickness: 1,
                                                       ),
                                                     ),
                                                   ),
                                         Padding(
-                                          padding: const EdgeInsets.all(8.0),
+                                          padding: const EdgeInsets.all(14.0),
                                           child: Column(
                                               children: [
                                                 Row(
@@ -437,15 +446,15 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                       child: Text(
                                                         'QTY :',
                                                         textAlign: TextAlign.right,
-                                                        style: TextStyle(fontSize: 13),
+                                                        style: TextStyle(fontSize: 13,),
                                                       ),
                                                     ),
                                                     Expanded(
                                                       flex: 1,
                                                       child: Padding(
-                                                        padding: const EdgeInsets.only(right:10.0),
+                                                        padding: const EdgeInsets.only(right:0.0),
                                                         child: Text(
-                                                          formatter.format(widget.DepartmentData?['totaldepqty']?? 0) ,
+                                                          (widget.DepartmentData?['totaldepqty']?? '0').toString() ,
                                                           textAlign: TextAlign.right,
                                                           style: TextStyle(fontSize: 13),
                                                         ),
@@ -476,22 +485,36 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                               ],
                                             ),
                                             
-                                        ),],),
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                        ],),
                                       ),
                                       SizedBox(height: 16,),
                                       //Container(
                                         //child:
                                          Card(
-  elevation: 4,
+                                          shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+  elevation: 2,
   child: Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(5.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Center(
           child: Text(
             "Current Sales Analyze",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
         ),
         SizedBox(height: 16),
@@ -501,11 +524,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
         SizedBox(height: 16),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top:5.0,left: 5.0,right: 5.0),
           child: Container(
             child: DataTable(
               dataRowHeight: 30,
-              columnSpacing: 50.0,
+              columnSpacing: 55.0,
               horizontalMargin: 0,
               columns: [
                 DataColumn(
@@ -515,15 +538,23 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   ),
                 ),
                 DataColumn(
-                  label: Text(
-                    '%',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  label: SizedBox(
+                    width: 30,
+                    child: Center(
+                      child: Text(
+                        '%',
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      ),
+                    ),
                   ),
                 ),
                 DataColumn(
-                  label: Text(
-                    'Amount',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                  label: SizedBox(
+                    width: 70,
+                    child: Text(
+                      'Amount',
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15,),textAlign: TextAlign.right
+                    ),
                   ),
                 ),
               ],
@@ -537,8 +568,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   DataCell(Row(
                     children: [
                               Container(
-                                width: 10,
-                                height: 10,
+                                width: 15,
+                                height: 15,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: entry['DrawerColor'],
@@ -550,12 +581,83 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                     ],
                   )),
                   DataCell(Text(value.toStringAsFixed(1),textAlign: TextAlign.right)),
-                  DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
+                  DataCell(SizedBox(width: 70,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                 ]);
               }).toList(),
             ),
           ),
         ),
+        SizedBox(
+                                                    height: 5.0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                          padding: const EdgeInsets.all(14.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'PAYMENT TYPES :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          (widget.DepartmentData2?['totalpaymentmethodpqty']?? 0).toString() ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData2?['totalpaymentmethod'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
       ],
     ),
   ),
@@ -563,7 +665,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
 
                                          //)
                                          Card(
-  elevation: 4,
+                                          shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+  elevation: 2,
   child: Padding(
     padding: const EdgeInsets.all(8.0),
     child: Column(
@@ -619,8 +724,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               Row(
                                 children: [
                                   Container(
-                                    width: 10,
-                                    height: 10,
+                                    width: 15,
+                                    height: 15,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: entry['DrawerColor'],
@@ -639,6 +744,77 @@ String monthName = DateFormat('MMM').format(DateTime.now());
             ),
           ),
         ),
+        SizedBox(
+                                                    height: 5.0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                          padding: const EdgeInsets.all(14.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'NO OF UNITS :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          (widget.DepartmentData3?['totalpaymentmethod']?? 0).toString() ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData3?['totalpaymentmethodpqty'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
       ],
     ),
   ),
@@ -651,7 +827,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   // child: SizedBox(
   //   height: 1000,
     child: Card(
-      elevation: 3,
+      shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -697,7 +876,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            child: Container(
                                             
                                             child: DataTable(
-                                              columnSpacing: 10.0,
+                                              columnSpacing: 6.0,
                                               dataRowHeight: 30,
                                               horizontalMargin: 0,
                                            columns: [
@@ -726,8 +905,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                DataCell(Row(
                                                  children: [
                                                    Container(
-                                                     width: 10,
-                                                     height: 10,
+                                                     width: 15,
+                                                     height: 15,
                                                      
                                                      decoration: BoxDecoration(
                                              shape: BoxShape.circle,
@@ -746,6 +925,100 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            }).toList(),
                                          ), ),
                                          ),
+                                         SizedBox(
+                                                    height: 5.0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(4.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                          padding: const EdgeInsets.only(top:16.0,bottom: 16.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'RECIEPT COUNT :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          (widget.DepartmentData4?['totalreceipt']?? 0).toString() ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'QTY :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          (widget.DepartmentData4?['totalhourlyqty']?? 0).toString() ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData4?['totalhourly'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
           ],
         ),
       ),
@@ -761,7 +1034,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   // child: SizedBox(
   //   height: 800,
     child: Card(
-      elevation: 3,
+      shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -821,8 +1097,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                DataCell(Row(
                                                  children: [
                                                    Container(
-                                                     width: 10,
-                                                     height: 10,
+                                                     width: 15,
+                                                     height: 15,
                                                      
                                                      decoration: BoxDecoration(
                                              shape: BoxShape.circle,
@@ -841,6 +1117,77 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            }).toList(),
                                          ), ),
                                          ),
+                                         SizedBox(
+                                                    height: 5.0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                          padding: const EdgeInsets.all(14.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'BILL COUNT :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          (widget.DepartmentData5?['Billcount']?? 0).toString() ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData5?['TotalBucketAmount'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
           ],
         ),
       ),
@@ -852,7 +1199,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                         
                                       SizedBox(height: 16,),
                                       Card(
-  elevation: 4,
+                                        shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+  elevation: 2,
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -873,13 +1223,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
         ),
       ),
       Padding(
-                                           padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
+                                           padding: const EdgeInsets.all(5.0),
                                            child: Container(
                                             
                                             child: DataTable(
-                                              columnSpacing: 160.0,
+                                              columnSpacing: 170.0,
                                               dataRowHeight: 30,
-                                              horizontalMargin: 8,
+                                              horizontalMargin: 0,
                                            columns: [
                                              DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Bill Date',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
                                             //  
@@ -900,13 +1250,87 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            }).toList(),
                                          ), ),
                                          ),
+                                         SizedBox(
+                                                    height: 5.0,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Padding(
+                                          padding: const EdgeInsets.all(14.0),
+                                          child: Column(
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13,),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Padding(
+                                                        padding: const EdgeInsets.only(right:0.0),
+                                                        child: Text(
+                                                          formatter.format(widget.DepartmentData6?['totalmonth']?? 0) ,
+                                                          textAlign: TextAlign.right,
+                                                          style: TextStyle(fontSize: 13),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Row(
+                                                  children: [
+                                                    Expanded(
+                                                      flex: 2,
+                                                      child: Text(
+                                                        'TOTAL :',
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                    Expanded(
+                                                      flex: 1,
+                                                      child: Text(
+                                                        formatter.format(widget.DepartmentData6?['monthAvg'] ?? 0),
+                                                        textAlign: TextAlign.right,
+                                                        style: TextStyle(fontSize: 13),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            
+                                        ),
+                                        SizedBox(
+                                                    height: 20,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(8.0),
+                                                      child: Divider(
+                                                        color: Colors.black,
+                                                        thickness: 1,
+                                                      ),
+                                                    ),
+                                                  ), 
     ],
   ),
 ),
 
                                       SizedBox(height: 16,),
                                       Card(
-                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+                                        elevation: 2,
                                         child: Padding(
                                           padding: const EdgeInsets.all(8.0),
                                           child: Container(
@@ -990,7 +1414,10 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                       ),
                                       SizedBox(height: 16,),
                                       Card(
-                                        elevation: 3,
+                                        shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+                                        elevation: 2,
                                         child: Padding(
                                              padding: const EdgeInsets.only(top:3.0,left: 0,right: 0),
                                              child: Column(
@@ -1295,12 +1722,12 @@ Widget buildlineChart(Map<String,dynamic> department) {
 
           show: false,
           // Show dots
-    getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-      radius: 1, // Set a very small radius
-      color: Colors.transparent, // Make dots transparent
-      strokeWidth: 0,
-       // Set stroke width to 0 to hide the dots completely
-    ),
+    // getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+    //   radius: 1, // Set a very small radius
+    //   color: Colors.transparent, // Make dots transparent
+    //   strokeWidth: 0,
+    //    // Set stroke width to 0 to hide the dots completely
+    // ),
         ),
             );
           },
@@ -1322,16 +1749,13 @@ Widget buildlineChart(Map<String,dynamic> department) {
               barWidth: sectionData.barWidth,
               isStrokeCapRound: sectionData.isStrokeCapRound,
               dotData: FlDotData(
-
-          show: false,
-          // Show dots
-    // getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
-    //   radius: 1, // Set a very small radius
-    //   color: Colors.transparent, // Make dots transparent
-    //   strokeWidth: 0,
-    //    // Set stroke width to 0 to hide the dots completely
-    // ),
-        ),
+              show: false,
+              // getDotPainter: (spot, percent, barData, index) => FlDotCirclePainter(
+              //   radius: 4,
+              //   color: Colors.white,
+              //   strokeWidth: 2,
+              // ),
+            ),
             );
           },
         ).toList(),
@@ -1354,6 +1778,7 @@ Widget buildlineChart(Map<String,dynamic> department) {
               ),
               gridData: FlGridData(show: false),
               borderData: FlBorderData(show: false),
+              
       ),
     );
   } 
