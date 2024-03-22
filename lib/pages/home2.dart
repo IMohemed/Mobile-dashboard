@@ -4,11 +4,13 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/db_con/local_db.dart';
+import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/locs.dart';
 import 'package:intl/intl.dart';
-bool? _isloading = true;
+import 'package:provider/provider.dart';
+//bool _isloading = true;
  GlobalKey<_LoginState> _loginKey = GlobalKey<_LoginState>();
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -20,6 +22,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   bool isloading = false;
   ApiService api = ApiService();
+  ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
   localDB local=localDB();
   String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String mei ='';
@@ -48,6 +51,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
 
   @override
   Widget build(BuildContext context) {
+    
     TextEditingController password=TextEditingController();
     return Scaffold(
       //backgroundColor:Colors.blue[400],
@@ -102,11 +106,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   ),
                   
                   onPressed: () async{
-                    setState(() {
-                      isloading=true;
-                    });
+                    
+                   apiService.setIsLoading(true);
                     // Add your login logic here
-
+                    
                     bool idExists = await api.doesUrlExist();
                     if(password.text == "8080" )
                     {
@@ -122,6 +125,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                      else{
                      //await api.postData();
                      data1= api.data;
+                    // bool load = ;
                      
                     // if(data1['CommonResult']['Table'][0]['MAC'] == "T"){
                       // String mac = data1['CommonResult']['Table'][0]['MAC'];
@@ -134,7 +138,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                       data3 = api.data2;
                       if(data3['CommonResult']['Table'][0]['ReturnMSGIMEI'] == "T")
                       {
-                        _getImei(date1); 
+                        _getImei(date1,); 
                         
                         //Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo()),);
 
@@ -152,34 +156,57 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                 ),
               );}
                   },
-                  child:isloading?
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Colors.white,
-                      ),
-                      const SizedBox(width: 24,),
-                       Text("Please wait...")
-                    ],
-                  )
-                  : Text('Login',),
+                  child: Text('Login',),
                   
-                ),  
+                ),
+                SizedBox(height: 36,),
+              Consumer<ApiService>(
+  builder: (context, apiService, _) {
+    bool isLoading = apiService.isLoading;
+    return Container(
+      //color: Colors.black,
+      child: isLoading
+          ? Card(
+            color: Color.fromARGB(96, 86, 57, 57),
+            shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+  elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                    SizedBox(width: 24),
+                    Text("Please wait...",style: TextStyle(color: Colors.white),),
+                  ],
+                ),
+            ),
+          )
+          : Container(), // Replace YourWidget() with your actual widget
+    );
+  },
+),
               ],
             ),
           ),
+          
         ),
       ),
     );
   }
   Future<void> _getImei(date ) async {
+     
+     
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     //if (Theme.of(context).platform == TargetPlatform.android) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       //if (!mounted) return;
       setState(() {
-        _isloading=true;
+        
         mei = androidInfo.androidId; 
         });// Using androidId as an example, you might need to request permission to access the IMEI number.
         print(mei);
@@ -209,10 +236,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
           departmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
           Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,)),);
-          // isloading = false;
+           
         });
         
-         
+         apiService.setIsLoading(false);
         //await api.loadCurrentSalesData(date:date1,loca:locations,imei:mei);
         //print('net:${net}');
       //});

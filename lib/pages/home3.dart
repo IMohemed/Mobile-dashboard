@@ -16,6 +16,7 @@ import 'package:flutter_project/pages/report.dart';
 import 'package:flutter_project/pages/sales.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart';
+import 'package:provider/provider.dart';
 //import 'package:pie_chart/pie_chart.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -304,7 +305,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
     
           ),
 //  
-
+          
           SizedBox(height: 10.0,),
           //SingleChildScrollView(
             //scrollDirection: Axis.horizontal,

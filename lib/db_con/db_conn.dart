@@ -8,6 +8,7 @@ import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/model/request.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
  String? mac_id="4988b924cfe11070";
 // String? url;
@@ -53,7 +54,12 @@ class ApiService extends ChangeNotifier{
  String? netsaleValue;
   List<CurrentSale> currentSales = [];
  Map<String, dynamic> get departmentData => DepartmentData;
-
+bool _isLoading = false;
+bool get isLoading => _isLoading;
+  void setIsLoading(bool value) {
+    _isLoading = value;
+    notifyListeners(); // Notify listeners that the state has changed
+   }
 
   void updateDepartmentData(Map<String, dynamic> newData) {
     DepartmentData = newData;
@@ -334,8 +340,11 @@ Future<bool> doesUrlExist() async {
     
       // An error occurred during the request, print the error
       print('Error: $e');
+      setIsLoading(false);
       showAlert();
       throw e;
+      
+      
     }
 
 

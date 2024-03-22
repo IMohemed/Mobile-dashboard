@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
+import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/loc2.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class HorizontalSlidingDemo extends StatefulWidget  {
@@ -31,8 +33,9 @@ List<CurrentSale>? curent;
 
 class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with ChangeNotifier {
   
-  bool _isCalendarEnabled = true;
+  //bool _isCalendarEnabled = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
  late Timer _timer;
   String? _selectedDay;
   ApiService api = ApiService();
@@ -41,6 +44,7 @@ class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with Chan
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
+bool isLoading = Provider.of<ApiService>(navigatorKey.currentState!.context).isLoading;
 @override
 // void dispose() {
 //   // Cancel the timer to avoid calling setState() after the widget is disposed
@@ -49,11 +53,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
 // }
 void enableCalendar() {
   setState(() {
-    _isCalendarEnabled = true;
+    //_isCalendarEnabled = true;
   });
 }
   @override
   Widget build(BuildContext context) {
+    
     return WillPopScope(
       onWillPop: ()async {
         
@@ -167,8 +172,8 @@ void enableCalendar() {
                     
                     Row(
                       children: [
-                        IconButton(onPressed: _isCalendarEnabled
-      ? () {
+                        IconButton(onPressed: isLoading
+      ? null:() {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -181,7 +186,7 @@ void enableCalendar() {
           // });
           //Timer(Duration(seconds: 10), enableCalendar); // Enable the calendar after 10 seconds
         }
-      : null, icon: Icon(Icons.calendar_today,color: _isCalendarEnabled ? Colors.white : Colors.grey),),
+       , icon: Icon(Icons.calendar_today,color: isLoading ?  Colors.grey:Colors.white ),),
                         
                         
                         IconButton(onPressed: ()async{
@@ -215,6 +220,7 @@ void enableCalendar() {
     );
   }
    Widget calender (context) {
+    
     return AlertDialog(
       //titlePadding: EdgeInsets.all(0),
       title: Container(
@@ -266,15 +272,19 @@ void enableCalendar() {
            String date1=DateFormat('dd/MM/yyyy').format(selectedDay);
     setState(() {
       _selectedDay = date1;
-      _isCalendarEnabled = false;
+     // _isCalendarEnabled = false;
     });
+
     print(_selectedDay);
+    apiService.setIsLoading(true );
+    isLoading?show():null;
     //_timer?.cancel();
-     _timer =Timer(Duration(seconds: 40), () {
-    setState(() {
-      _isCalendarEnabled = true;
-    });
-  });
+  //    _timer =Timer(Duration(seconds: 40), () {
+  //   setState(() {
+  //     _isCalendarEnabled = true;
+  //   });
+  // });
+    
     widget.onDateSelected!(_selectedDay!);
     Navigator.of(context).pop();
   },
@@ -288,6 +298,30 @@ void enableCalendar() {
           child: Text('Close'),
         ),
       ],
+    );
+  }
+   Widget show() {
+    return Dialog(
+      child: Card(
+        color: Color.fromARGB(96, 86, 57, 57),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+        ),
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Colors.white,
+              ),
+              SizedBox(width: 24),
+              Text("Please wait...", style: TextStyle(color: Colors.white)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
