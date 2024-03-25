@@ -44,7 +44,7 @@ class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with Chan
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
-bool isLoading = Provider.of<ApiService>(navigatorKey.currentState!.context).isLoading;
+
 @override
 // void dispose() {
 //   // Cancel the timer to avoid calling setState() after the widget is disposed
@@ -58,7 +58,7 @@ void enableCalendar() {
 }
   @override
   Widget build(BuildContext context) {
-    
+    bool isLoading = Provider.of<ApiService>(context).isLoading;
     return WillPopScope(
       onWillPop: ()async {
         
@@ -172,12 +172,11 @@ void enableCalendar() {
                     
                     Row(
                       children: [
-                        IconButton(onPressed: isLoading
-      ? null:() {
+                        IconButton(onPressed: () {
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return calender(context);
+              return calender(context,isLoading);
             },
           );
           // Disable the calendar icon for 10 seconds
@@ -186,7 +185,7 @@ void enableCalendar() {
           // });
           //Timer(Duration(seconds: 10), enableCalendar); // Enable the calendar after 10 seconds
         }
-       , icon: Icon(Icons.calendar_today,color: isLoading ?  Colors.grey:Colors.white ),),
+       , icon: Icon(Icons.calendar_today,color: Colors.white ),),
                         
                         
                         IconButton(onPressed: ()async{
@@ -219,8 +218,8 @@ void enableCalendar() {
       ),
     );
   }
-   Widget calender (context) {
-    
+   Widget calender (context,isloading) {
+    //bool isLoading = Provider.of<ApiService>(context).isLoading;
     return AlertDialog(
       //titlePadding: EdgeInsets.all(0),
       title: Container(
@@ -270,14 +269,18 @@ void enableCalendar() {
           ),
           onDaySelected: (selectedDay, focusedDay) {
            String date1=DateFormat('dd/MM/yyyy').format(selectedDay);
-    setState(() {
-      _selectedDay = date1;
-     // _isCalendarEnabled = false;
-    });
+    
+  setState(() {
+    _selectedDay = date1;
+    // _isCalendarEnabled = false;
+  });
+
 
     print(_selectedDay);
     apiService.setIsLoading(true );
-    isLoading?show():null;
+        
+    //print(isLoading);
+    
     //_timer?.cancel();
   //    _timer =Timer(Duration(seconds: 40), () {
   //   setState(() {
@@ -285,8 +288,28 @@ void enableCalendar() {
   //   });
   // });
     
-    widget.onDateSelected!(_selectedDay!);
+    Future.delayed(Duration(milliseconds: 100), () {
+  
+  //Provider.of<ApiService>(context, listen: false).addListener(() {
     Navigator.of(context).pop();
+    bool isLoading = Provider.of<ApiService>(context,listen: false).isLoading;
+    print(isLoading);
+    if (isLoading) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return show(context);
+        },
+      );
+    }
+    
+  //});
+  widget.onDateSelected!(_selectedDay!);
+  
+  
+});
+
   },
         ),
       ),
@@ -300,28 +323,32 @@ void enableCalendar() {
       ],
     );
   }
-   Widget show() {
-    return Dialog(
-      child: Card(
-        color: Color.fromARGB(96, 86, 57, 57),
+   Widget show(BuildContext context) {
+  return Dialog(
+    backgroundColor: Color.fromARGB(0, 197, 73, 73), // Make dialog background transparent
+    child: Card(
+      
+        color: Color.fromARGB(95, 37, 26, 26), // Set the desired color here
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-        ),
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: Colors.white,
-              ),
-              SizedBox(width: 24),
-              Text("Please wait...", style: TextStyle(color: Colors.white)),
-            ],
-          ),
+    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+  ),
+  elevation: 2,  // Adjust the radius as needed
+      
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: Colors.white,
+            ),
+            SizedBox(width: 24),
+            Text("Please wait...", style: TextStyle(color: Colors.white)),
+          ],
         ),
       ),
-    );
-  }
+     ),
+  );
+}
+
 }

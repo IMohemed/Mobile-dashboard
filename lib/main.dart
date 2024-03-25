@@ -12,7 +12,7 @@ ApiService api = ApiService();
 void main() {
   runApp(
     ChangeNotifierProvider<ApiService>(
-      create: (_) => api, // Replace ApiService() with your actual service instance
+      create: (_) => ApiService(), // Replace ApiService() with your actual service instance
       child:  
      const MyApp(),
     ),

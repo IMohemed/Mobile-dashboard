@@ -9,6 +9,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/model/current_sale.dart';
+import 'package:flutter_project/pages/custom.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/netsales.dart';
 import 'package:flutter_project/pages/piechart.dart';
@@ -318,7 +319,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                     //child:Card(
                        //elevation: 4,
                       child: CustomScrollView(
-                        physics: AlwaysScrollableScrollPhysics(),
+                        physics: CustomScrollPhysics(maxScrollSpeed: 8.0),
                         slivers: [
                           SliverList(
                             //physics: AlwaysScrollableScrollPhysics(),

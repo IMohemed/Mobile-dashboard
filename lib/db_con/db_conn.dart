@@ -40,8 +40,8 @@ class ApiService extends ChangeNotifier{
   Colors.brown,
   Colors.grey,
   Colors.blueGrey,
-  Colors.black,];
-  
+  //Colors.black,
+  ];
   PieChartData chartData = PieChartData();
  Map<String, dynamic> DepartmentData = {};
  Map<String, dynamic> UnitWiseData = {};
@@ -557,6 +557,8 @@ Future<void> loadPieChartData({date,loca,imei}) async {
    double qty=0;
    double discount=0;
    double nettotal=0;
+     
+
    double aa=0;
 
    if (responseData['CommonResult']['Table'] != null && responseData['CommonResult']['Table'].isNotEmpty) {
@@ -566,14 +568,15 @@ Future<void> loadPieChartData({date,loca,imei}) async {
         }
     List<dynamic> table = responseData['CommonResult']['Table'];
     table.forEach((pie) {
+          int randomIndex = Random().nextInt(color.length);
           piedatalist.add({
-            'DrawerColor': color[i],
+            'DrawerColor': color[randomIndex],
             'Dept_Name': pie['Dept_Name'],
             'Qty': pie['Qty'],
             'Amount': pie['Amount'],
             'Contibution': pie['Contibution'],
           });
-          i+=1;
+          //randomIndex+=1;
           qty += pie['Qty'];
           total = pie['TotalAmount'];
 
@@ -598,8 +601,10 @@ Future<void> loadPieChartData({date,loca,imei}) async {
         // }
         PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
+    int index = piedata.indexOf(data); // Get the index of the current data
+    Color sectionColor = piedatalist[index]['DrawerColor'];
     return PieChartSectionData(
-      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      color: sectionColor, // Assuming Material is a list of colors
       value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
       title: data['label'], // Empty title
       radius: 80, // Radius of pie chart sections
@@ -685,9 +690,10 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       //table.sort((a, b) => b['Contibution'] - a['Contibution']);
       print('table srt${table}');
       table.forEach((piem) {
+        int randomIndex = Random().nextInt(color.length);
         piedata.add({'value': piem['Contibution'], 'label': piem['Prod_Name']});
         paymentmethodlist.add({
-          'DrawerColor': color[i],
+          'DrawerColor': color[randomIndex],
           'Prod_Name': piem['Prod_Name'],
           'Contibution': piem['Contibution'],
           'Amount': piem['Amount'],
@@ -700,8 +706,10 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     print('pieda ${piedata}');
     PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
+    int index = piedata.indexOf(data); // Get the index of the current data
+    Color sectionColor = paymentmethodlist[index]['DrawerColor'];
     return PieChartSectionData(
-      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      color: sectionColor, // Assuming Material is a list of colors
       value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
       title: data['label'], // Empty title
       radius: 80, // Radius of pie chart sections
@@ -778,12 +786,13 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
   //table.sort((a, b) {b['Amount'] - a['Amount']});
   print('table srt1${table}');
   table.forEach((piem) {
+    int randomIndex = Random().nextInt(color.length);
     piedata.add({
       'value': (((piem['Amount'] ) / 182381.3 ) * 100),
   'label': 'Unit' + (piem['UNIT'] ?? ''),
     });
     unitlist.add({
-      'DrawerColor': color[i],
+      'DrawerColor': color[randomIndex],
       'Prod_Name': piem['UNIT'],
       'Contibution': (piem['Amount'] / 182381.3) * 100,
       'Amount': piem['Amount'],
@@ -796,8 +805,10 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
      print('pieda ${piedata}');
     PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
+    int index = piedata.indexOf(data); // Get the index of the current data
+    Color sectionColor = unitlist[index]['DrawerColor'];
     return PieChartSectionData(
-      color: color[piedata.indexOf(data)], // Assuming Material is a list of colors
+      color: sectionColor, // Assuming Material is a list of colors
       value: data['value'], // Assuming piedata contains Map<String, dynamic> objects
       title: data['label'], // Empty title
       radius: 80, // Radius of pie chart sections
