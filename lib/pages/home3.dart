@@ -22,6 +22,7 @@ import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class Dashboard extends StatefulWidget {
+  String? selectedDay;
   List<CurrentSale>? current;
   Map<String, dynamic>?  DepartmentData;
   Map<String, dynamic>?  DepartmentData1;
@@ -31,7 +32,7 @@ class Dashboard extends StatefulWidget {
   Map<String, dynamic>?  DepartmentData5;
   Map<String, dynamic>?  DepartmentData6;
   Map<String, dynamic>?  DepartmentData7;
-   Dashboard({super.key,this.current, this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1});
+   Dashboard({super.key,this.current, this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1,this.selectedDay});
 
   @override
   State<Dashboard> createState() => _DashboardState();
@@ -52,13 +53,14 @@ class _DashboardState extends State<Dashboard> with SingleTickerProviderStateMix
   late Animation<double> _animation1;
   List<CurrentSale> currentSales = [];
   DateTime now =DateTime.now() ;
+  String? date2;
   int date = DateTime.now().day;
 int year = DateTime.now().year;
 Map<String, dynamic>?  departmentData={};
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
  String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
-  bool _isCalendarVisible = false;
+ 
   double _number = 0,_number1=0;
   Map<String,double> datamap  = {
     "grocery":50,
@@ -126,6 +128,8 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   
   @override
   Widget build(BuildContext context) {
+    date2 = widget.selectedDay??date1;
+  
     return Scaffold(
     key: _scaffoldKey,
     
@@ -163,7 +167,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                   children: [
                     Text('Last income on ', // Format the number as needed
                                 style: TextStyle(fontSize: 16,color: Colors.white,),),
-                    Text('${date1}',style: TextStyle(fontSize: 16,color: Colors.white,))
+                    Text('${date2}',style: TextStyle(fontSize: 16,color: Colors.white,))
                   ],
                 ), // Set the color of the section
               ),
@@ -739,7 +743,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               ),
                     ),
                     DataCell(Text(value.toStringAsFixed(2))),
-                    DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
+                    DataCell(SizedBox(width: 75,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                   ],
                 );
               }).toList(),
@@ -874,7 +878,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                ),
             
             Padding(
-                                           padding: const EdgeInsets.only(top:0.0,left: 0,right: 0),
+                                           padding: const EdgeInsets.only(top:0.0,left: 0,right: 2.0),
                                            child: Container(
                                             
                                             child: DataTable(

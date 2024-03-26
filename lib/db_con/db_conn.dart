@@ -429,6 +429,7 @@ Future<bool> doesUrlExist() async {
   //}
   catch (e) {
     // Handle exceptions
+    setIsLoading(false);
     print('Exception:n $e');showAlert();
     throw e;
 
@@ -502,6 +503,7 @@ for (var element in names) {
   } catch (e) {
     // Handle exceptions
     print('Exception: $e');
+    setIsLoading(false);
     showAlert();
     throw e;
   }
@@ -557,7 +559,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
    double qty=0;
    double discount=0;
    double nettotal=0;
-     
+     int? previousIndex;
 
    double aa=0;
 
@@ -569,6 +571,12 @@ Future<void> loadPieChartData({date,loca,imei}) async {
     List<dynamic> table = responseData['CommonResult']['Table'];
     table.forEach((pie) {
           int randomIndex = Random().nextInt(color.length);
+          do {
+  randomIndex = Random().nextInt(color.length);
+} while (randomIndex == previousIndex);
+
+// Update the previous index to the current one
+previousIndex = randomIndex;
           piedatalist.add({
             'DrawerColor': color[randomIndex],
             'Dept_Name': pie['Dept_Name'],
@@ -630,6 +638,7 @@ print('d:${DepartmentData['departmetlist']}');
    catch (e) {
     // Handle exceptions
     print('Exception:a $e');
+    setIsLoading(false);
     showAlert();
     throw e;
   }
@@ -678,6 +687,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       print('pay sale:${responseData}');
       print(date+loca);
       int i = 0;
+      int? previousIndex;
     double total=0;
     int listSize = responseData['CommonResult']['Table'].length;
     List<Map<String, dynamic>> piedata = [];
@@ -691,6 +701,9 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       print('table srt${table}');
       table.forEach((piem) {
         int randomIndex = Random().nextInt(color.length);
+        do {
+  randomIndex = Random().nextInt(color.length);
+} while (randomIndex == previousIndex);
         piedata.add({'value': piem['Contibution'], 'label': piem['Prod_Name']});
         paymentmethodlist.add({
           'DrawerColor': color[randomIndex],
@@ -728,6 +741,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\p $e');
      showAlert();
+     setIsLoading(false);
      throw e;
     }
 }
@@ -775,6 +789,7 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
       print('pay sale:${responseData}');
       print(date+loca);
       int i = 0;
+      int? previousIndex;
      double total=0;
      int listSize = responseData['CommonResult']['Table'].length;
      List<Map<String, dynamic>> piedata = [];
@@ -787,6 +802,9 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
   print('table srt1${table}');
   table.forEach((piem) {
     int randomIndex = Random().nextInt(color.length);
+    do {
+  randomIndex = Random().nextInt(color.length);
+} while (randomIndex == previousIndex);
     piedata.add({
       'value': (((piem['Amount'] ) / 182381.3 ) * 100),
   'label': 'Unit' + (piem['UNIT'] ?? ''),

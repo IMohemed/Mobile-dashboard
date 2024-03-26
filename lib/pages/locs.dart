@@ -24,9 +24,9 @@ List<CurrentSale>? curent;
   Map<String, dynamic>?  departmentData5;
   Map<String, dynamic>?  departmentData6;
   Map<String, dynamic>?  departmentData7;
-  String? mei,loc,locNa;
+  String? mei,loc,locNa,date2;
 
-   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa});
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa,this.date2});
   @override
   State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
 }
@@ -44,6 +44,7 @@ class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with Chan
 int year = DateTime.now().year;
 String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
+String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
 @override
 // void dispose() {
@@ -192,7 +193,28 @@ void enableCalendar() {
                          await api.loadCurrentSalesData(date: '05/03/2024',loca: "01",imei: "mei");
                         }, icon: Icon(Icons.notifications,color: Colors.white,)),
                         IconButton(onPressed: (){
-      
+                          apiService.setIsLoading(true );
+                          Future.delayed(Duration.zero, () {
+  
+  //Provider.of<ApiService>(context, listen: false).addListener(() {
+    //Navigator.of(context).pop();
+    bool isLoading = Provider.of<ApiService>(context,listen: false).isLoading;
+    print(isLoading);
+    if (isLoading) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return show(context);
+        },
+      );
+    }
+    
+  //});
+  widget.onDateSelected!( date1);
+  
+  
+});
                         }, icon: Icon(Icons.refresh,color: Colors.white,)),
                       ], 
                     ),
@@ -208,7 +230,7 @@ void enableCalendar() {
               child: PageView(
                 scrollDirection: Axis.horizontal, // Set the scrolling direction to horizontal
                 children: [
-                  Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,),
+                  Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
                   Dashboard2(),
                 ],
               ),
@@ -268,15 +290,19 @@ void enableCalendar() {
             weekendStyle: TextStyle(color: Colors.red),
           ),
           onDaySelected: (selectedDay, focusedDay) {
-           String date1=DateFormat('dd/MM/yyyy').format(selectedDay);
-    
-  setState(() {
-    _selectedDay = date1;
-    // _isCalendarEnabled = false;
-  });
+           if (selectedDay == focusedDay) {
+    String date1 = DateFormat('dd/MM/yyyy').format(selectedDay);
+
+    setState(() {
+      _selectedDay = date1;
+      // _isCalendarEnabled = false;
+    });
+  
+           
 
 
     print(_selectedDay);
+
     apiService.setIsLoading(true );
         
     //print(isLoading);
@@ -288,7 +314,7 @@ void enableCalendar() {
   //   });
   // });
     
-    Future.delayed(Duration(milliseconds: 100), () {
+    Future.delayed(Duration.zero, () {
   
   //Provider.of<ApiService>(context, listen: false).addListener(() {
     Navigator.of(context).pop();
@@ -310,7 +336,7 @@ void enableCalendar() {
   
 });
 
-  },
+   }},
         ),
       ),
       actions: [
