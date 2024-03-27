@@ -9,6 +9,7 @@ import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/loc2.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -32,10 +33,11 @@ List<CurrentSale>? curent;
 }
 
 class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with ChangeNotifier {
-  
+  bool? isLoading;
   //bool _isCalendarEnabled = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
+  
  late Timer _timer;
   String? _selectedDay;
   ApiService api = ApiService();
@@ -59,7 +61,7 @@ void enableCalendar() {
 }
   @override
   Widget build(BuildContext context) {
-    bool isLoading = Provider.of<ApiService>(context).isLoading;
+    
     return WillPopScope(
       onWillPop: ()async {
         
@@ -175,7 +177,7 @@ void enableCalendar() {
                       children: [
                         IconButton(onPressed: () {
           showDialog(
-            context: context,
+            context: navigatorKey.currentState!.context,
             builder: (BuildContext context) {
               return calender(context,isLoading);
             },
@@ -194,15 +196,15 @@ void enableCalendar() {
                         }, icon: Icon(Icons.notifications,color: Colors.white,)),
                         IconButton(onPressed: (){
                           apiService.setIsLoading(true );
-                          Future.delayed(Duration.zero, () {
+                          Future.delayed(Duration(milliseconds: 100), () {
   
   //Provider.of<ApiService>(context, listen: false).addListener(() {
     //Navigator.of(context).pop();
-    bool isLoading = Provider.of<ApiService>(context,listen: false).isLoading;
+    isLoading = apiService.isLoading;
     print(isLoading);
-    if (isLoading) {
+    if (isLoading!) {
       showDialog(
-        context: context,
+        context: navigatorKey.currentState!.context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return show(context);
@@ -318,17 +320,18 @@ void enableCalendar() {
   
   //Provider.of<ApiService>(context, listen: false).addListener(() {
     Navigator.of(context).pop();
-    bool isLoading = Provider.of<ApiService>(context,listen: false).isLoading;
+    isLoading = apiService.isLoading;
     print(isLoading);
-    if (isLoading) {
+    if (isLoading!) {
       showDialog(
-        context: context,
+        context: navigatorKey.currentState!.context,
         barrierDismissible: false,
-        builder: (BuildContext context) {
+        builder: (BuildContext context) { 
           return show(context);
         },
       );
     }
+    else null;
     
   //});
   widget.onDateSelected!(_selectedDay!);
@@ -349,7 +352,7 @@ void enableCalendar() {
       ],
     );
   }
-   Widget show(BuildContext context) {
+   Widget show( context) {
   return Dialog(
     backgroundColor: Color.fromARGB(0, 197, 73, 73), // Make dialog background transparent
     child: Card(

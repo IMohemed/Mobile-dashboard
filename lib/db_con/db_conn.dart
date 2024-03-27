@@ -58,6 +58,7 @@ bool _isLoading = false;
 bool get isLoading => _isLoading;
   void setIsLoading(bool value) {
     _isLoading = value;
+    print(_isLoading);
     notifyListeners(); // Notify listeners that the state has changed
    }
 
@@ -340,7 +341,7 @@ Future<bool> doesUrlExist() async {
     
       // An error occurred during the request, print the error
       print('Error: $e');
-      setIsLoading(false);
+      
       showAlert();
       throw e;
       
@@ -429,7 +430,7 @@ Future<bool> doesUrlExist() async {
   //}
   catch (e) {
     // Handle exceptions
-    setIsLoading(false);
+    
     print('Exception:n $e');showAlert();
     throw e;
 
@@ -503,7 +504,7 @@ for (var element in names) {
   } catch (e) {
     // Handle exceptions
     print('Exception: $e');
-    setIsLoading(false);
+    
     showAlert();
     throw e;
   }
@@ -571,12 +572,12 @@ Future<void> loadPieChartData({date,loca,imei}) async {
     List<dynamic> table = responseData['CommonResult']['Table'];
     table.forEach((pie) {
           int randomIndex = Random().nextInt(color.length);
-          do {
-  randomIndex = Random().nextInt(color.length);
-} while (randomIndex == previousIndex);
+//           do {
+//   randomIndex = Random().nextInt(color.length);
+// } while (randomIndex == previousIndex);
 
-// Update the previous index to the current one
-previousIndex = randomIndex;
+// // Update the previous index to the current one
+// previousIndex = randomIndex;
           piedatalist.add({
             'DrawerColor': color[randomIndex],
             'Dept_Name': pie['Dept_Name'],
@@ -638,7 +639,7 @@ print('d:${DepartmentData['departmetlist']}');
    catch (e) {
     // Handle exceptions
     print('Exception:a $e');
-    setIsLoading(false);
+    
     showAlert();
     throw e;
   }
@@ -701,9 +702,9 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       print('table srt${table}');
       table.forEach((piem) {
         int randomIndex = Random().nextInt(color.length);
-        do {
-  randomIndex = Random().nextInt(color.length);
-} while (randomIndex == previousIndex);
+//         do {
+//   randomIndex = Random().nextInt(color.length);
+// } while (randomIndex == previousIndex);
         piedata.add({'value': piem['Contibution'], 'label': piem['Prod_Name']});
         paymentmethodlist.add({
           'DrawerColor': color[randomIndex],
@@ -741,7 +742,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
     catch(e){
      print('Exception:a\p $e');
      showAlert();
-     setIsLoading(false);
+     
      throw e;
     }
 }
@@ -802,9 +803,9 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
   print('table srt1${table}');
   table.forEach((piem) {
     int randomIndex = Random().nextInt(color.length);
-    do {
-  randomIndex = Random().nextInt(color.length);
-} while (randomIndex == previousIndex);
+//     do {
+//   randomIndex = Random().nextInt(color.length);
+// } while (randomIndex == previousIndex);
     piedata.add({
       'value': (((piem['Amount'] ) / 182381.3 ) * 100),
   'label': 'Unit' + (piem['UNIT'] ?? ''),
@@ -1346,13 +1347,17 @@ void showAlert() {
             'The server encountered a temporary error and could not complete your request.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () {
+              Navigator.of(context).pop();
+              final yourClassInstance = Provider.of<ApiService>(context,listen: false);
+yourClassInstance.setIsLoading(false);
+            },
             child: Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
               ///loadLocations(imei,date);
-              Dashboard();
+             // Dashboard();
                Navigator.of(context).pop();
               },
             child: Text('Try Again'),
@@ -1363,19 +1368,4 @@ void showAlert() {
   );
 }
 
-}
-List<Color> generateRandomColors(int count) {
-  List<Color> colors = [];
-  final random = Random();
-  
-  for (int i = 0; i < count; i++) {
-    Color color = Color.fromRGBO(
-      random.nextInt(256), // Red
-      random.nextInt(256), // Green
-      random.nextInt(256), // Blue
-      1.0, // Opacity
-    );
-    colors.add(color);
-  }
-  return colors;
 }
