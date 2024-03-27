@@ -353,30 +353,37 @@ void enableCalendar() {
     );
   }
    Widget show( context) {
-  return Dialog(
-    backgroundColor: Color.fromARGB(0, 197, 73, 73), // Make dialog background transparent
-    child: Card(
-      
-        color: Color.fromARGB(95, 37, 26, 26), // Set the desired color here
-        shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-  ),
-  elevation: 2,  // Adjust the radius as needed
-      
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(
-              color: Colors.white,
-            ),
-            SizedBox(width: 24),
-            Text("Please wait...", style: TextStyle(color: Colors.white)),
-          ],
+  return WillPopScope(
+     onWillPop: ()async {
+        
+        SystemNavigator.pop();
+        return false;
+      },
+    child: Dialog(
+      backgroundColor: Color.fromARGB(0, 197, 73, 73), // Make dialog background transparent
+      child: Card(
+        
+          color: Color.fromARGB(95, 37, 26, 26), // Set the desired color here
+          shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
+    ),
+    elevation: 2,  // Adjust the radius as needed
+        
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                color: Colors.white,
+              ),
+              SizedBox(width: 24),
+              Text("Please wait...", style: TextStyle(color: Colors.white)),
+            ],
+          ),
         ),
-      ),
-     ),
+       ),
+    ),
   );
 }
 
