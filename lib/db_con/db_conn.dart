@@ -1349,8 +1349,9 @@ void showAlert() {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              final yourClassInstance = Provider.of<ApiService>(context,listen: false);
-yourClassInstance.setIsLoading(false);
+              //final yourClassInstance = Provider.of<ApiService>(context,listen: false);
+//yourClassInstance.
+setIsLoading(false);
             },
             child: Text('Cancel'),
           ),

@@ -160,36 +160,41 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   
                 ),
                 SizedBox(height: 36,),
-              Consumer<ApiService>(
-  builder: (context, apiService, _) {
+  //             Consumer<ApiService>(
+  // builder: (context, apiService, _) {
+    
+ Builder(
+  builder: (BuildContext context) {
     bool isLoading = apiService.isLoading;
     return Container(
       //color: Colors.black,
       child: isLoading
           ? Card(
-            color: Color.fromARGB(96, 86, 57, 57),
-            shape: RoundedRectangleBorder(
-    borderRadius: BorderRadius.circular(10.0), // Adjust the radius as needed
-  ),
-  elevation: 2,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+              color: Color.fromARGB(96, 86, 57, 57),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              elevation: 2,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
                       color: Colors.white,
                     ),
                     SizedBox(width: 24),
-                    Text("Please wait...",style: TextStyle(color: Colors.white),),
+                    Text("Please wait...", style: TextStyle(color: Colors.white)),
                   ],
                 ),
-            ),
-          )
+              ),
+            )
           : Container(), // Replace YourWidget() with your actual widget
     );
   },
 ),
+//   },
+// ),
               ],
             ),
           ),

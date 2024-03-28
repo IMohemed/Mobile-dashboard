@@ -6,13 +6,14 @@ import 'package:flutter_project/pages/home.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/piechart.dart';
+import 'package:path/path.dart';
 import 'package:provider/provider.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 ApiService api = ApiService();
 void main() {
   runApp(
-    ChangeNotifierProvider<ApiService>(
-      create: (_) => ApiService(), // Replace ApiService() with your actual service instance
+    ChangeNotifierProvider(
+      create: (Context) => ApiService(), // Replace ApiService() with your actual service instance
       child:  
      const MyApp(),
     ),
