@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: navigatorKey,
       
       debugShowCheckedModeBanner: false,
-      home:  const AuthGate(),
+      home:  const Login(),
     );
   }
 }

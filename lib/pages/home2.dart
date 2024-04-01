@@ -26,7 +26,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   localDB local=localDB();
   String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
   String mei ='';
-  String? loc,loc1,locNa;
+  String? loc,loc1,locNa,locNa2;
   Map<String, dynamic>  departmentData={};
   Map<String, dynamic>  departmentData1={};
   Map<String, dynamic>  departmentData2={};
@@ -35,7 +35,17 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   Map<String, dynamic>  departmentData5={};
   Map<String, dynamic>  departmentData6={};
   Map<String, dynamic>  departmentData7={};
+
+  Map<String, dynamic>  DepartmentData={};
+  Map<String, dynamic>  DepartmentData1={};
+  Map<String, dynamic>  DepartmentData2={};
+  Map<String, dynamic>  DepartmentData3={};
+  Map<String, dynamic>  DepartmentData4={};
+  Map<String, dynamic>  DepartmentData5={};
+  Map<String, dynamic>  DepartmentData6={};
+  Map<String, dynamic>  DepartmentData7={};
   List<CurrentSale> current = [];
+  List<CurrentSale> current1 = [];
   String imei = "";
   bool _rememberMe = false;
   Map<String,dynamic> data1 ={};
@@ -113,26 +123,27 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                     bool idExists = await api.doesUrlExist();
                     if(password.text == "8080" )
                     {
-                      if(idExists)
-              //         ScaffoldMessenger.of(context).showSnackBar(
-              //   SnackBar(
-              //     content: Text('Id exists'),
-              //     duration: Duration(seconds: 2), // Duration for which the snackbar is visible
-              //   ),
-              // )
-              print("object");
+              //         if(idExists)
+              // //         ScaffoldMessenger.of(context).showSnackBar(
+              // //   SnackBar(
+              // //     content: Text('Id exists'),
+              // //     duration: Duration(seconds: 2), // Duration for which the snackbar is visible
+              // //   ),
+              // // )
+              // print("object");
                      //print(imei);
-                     else{
-                     //await api.postData();
+                     //else
+                     {
+                     await api.postData();
                      data1= api.data;
                     // bool load = ;
                      
-                    // if(data1['CommonResult']['Table'][0]['MAC'] == "T"){
-                      // String mac = data1['CommonResult']['Table'][0]['MAC'];
-                      // String url = data1['CommonResult']['Table'][0]['URL'];
+                    if(data1['CommonResult']['Table'][0]['MAC'] == "T"){
+                      String mac = data1['CommonResult']['Table'][0]['MAC'];
+                      String url = data1['CommonResult']['Table'][0]['URL'];
                        
                       //  //if(!idExists){
-                      // await api.setUrlFromSharedPreferences(uri: url);
+                       await api.setUrlFromSharedPreferences(uri: url);
                       //print(mac+ url);
                       await api.sendData();
                       data3 = api.data2;
@@ -145,9 +156,10 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                        //}
                       //else {}
                      }
+                    }
                     print(data1);
-                    }
-                    }
+                    //}
+                    }}
                     
                     else {ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -216,8 +228,8 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
         });// Using androidId as an example, you might need to request permission to access the IMEI number.
         print(mei);
         await api.loadLocations(mei,date);
-        loc=api.loca;
-        locNa=api.locNa;
+        loc=api.names[0];
+        locNa=api.locs[0 ];
         // loc1 = loc?.replaceAll(RegExp(r'[0-9]+'), (int.parse(loc!.replaceAll(RegExp(r'[^0-9]'), '')) + 1).toString());
         // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date,loca:loc,imei:mei);
@@ -240,23 +252,76 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
           departmentData6 = api.MonthlyData;
           departmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
-          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,date2: date,)),);
+          // Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc,locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1,onDateSelected: _getImei,date2: date,)),);
            
         });
-        
-         apiService.setIsLoading(false);
+         _getImei2(date);
+         //apiService.setIsLoading(false);
         //await api.loadCurrentSalesData(date:date1,loca:locations,imei:mei);
         //print('net:${net}');
       //});
   //}
   }
-  void processUrlAndMac(String url, String mac) {
-  // Use the url and mac as needed
-  print('Received URL: $url');
-  print('Received MAC: $mac');
-}
+//   void processUrlAndMac(String url, String mac) {
+//   // Use the url and mac as needed
+//   print('Received URL: $url');
+//   print('Received MAC: $mac');
+// }
 
-
+Future<void> _getImei2(date ) async {
+     
+     
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    //if (Theme.of(context).platform == TargetPlatform.android) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      //if (!mounted) return;
+      setState(() {
+        
+        mei = androidInfo.androidId; 
+        });// Using androidId as an example, you might need to request permission to access the IMEI number.
+        print(mei);
+        await api.loadLocations(mei,date);
+        loc1=api.names[1];
+        locNa2=api.locs[1];
+        // loc1 = loc?.replaceAll(RegExp(r'[0-9]+'), (int.parse(loc!.replaceAll(RegExp(r'[^0-9]'), '')) + 1).toString());
+        // List<String> locations = ['${loc}', '${loc1}'];
+        await api.loadCurrentSalesData(date:date,loca:loc1,imei:mei);
+        await api.loadPieChartData(date: date,loca: loc1,imei: mei);
+        await api.loadpaymentPieChartData(date: date,loca: loc1,imei: mei);
+        await api.LoadUnitWiseData(date: date,loca: loc1,imei: mei);
+        await api.loadHourlyData(date: date,loca: loc1,imei: mei);
+        await api.LoadBucketData(date: date,loca:loc1,imei: mei);
+        await api.loadMonthlySalesData(date: date,loca: loc1,imei: mei);
+        await api.loadLastBillData(date: date,loca: loc1,imei: mei);
+        //if (!mounted) return;
+        setState(() {
+            
+          DepartmentData1 = api.sale; 
+          DepartmentData = api.DepartmentData;
+          DepartmentData2 = api.PaymentData;
+          DepartmentData3 = api.UnitWiseData;
+          DepartmentData4 = api.HourlyData;
+          DepartmentData5 = api.BasketData; 
+          DepartmentData6 = api.MonthlyData;
+          DepartmentData7 = api.LastBillData;
+          print('dep:${departmentData3}');
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc1,locNa1: locNa2,DepartmentData: DepartmentData,DepartmentData2: DepartmentData2,DepartmentData3: DepartmentData3,DepartmentData4: DepartmentData4,DepartmentData5: DepartmentData5,DepartmentData6: DepartmentData6,DepartmentData7: DepartmentData7,DepartmentData1: DepartmentData1,onDateSelected: _getImei,date2: date,
+          locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1
+          )),);
+           
+        });
+        apiService.setIsLoading(false);
+        
+        //await api.loadCurrentSalesData(date:date1,loca:locations,imei:mei);
+        //print('net:${net}');
+      //});
+  //}
+  }
+//   void processUrlAndMac(String url, String mac) {
+//   // Use the url and mac as needed
+//   print('Received URL: $url');
+//   print('Received MAC: $mac');
+// }
 
 }
 // class AnotherClass {

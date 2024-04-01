@@ -17,23 +17,27 @@ class HorizontalSlidingDemo extends StatefulWidget  {
   //const HorizontalSlidingDemo({super.key});
   Function(String)? onDateSelected;
 List<CurrentSale>? curent;
-  Map<String, dynamic>?  departmentData;
-  Map<String, dynamic>?  departmentData1;
+  Map<String, dynamic>?  departmentData,DepartmentData,DepartmentData1,DepartmentData2,DepartmentData3,DepartmentData4,DepartmentData5,DepartmentData6;
+  Map<String, dynamic>?  departmentData1,DepartmentData7;
   Map<String, dynamic>?  departmentData2;
   Map<String, dynamic>?  departmentData3;
   Map<String, dynamic>?  departmentData4;
   Map<String, dynamic>?  departmentData5;
   Map<String, dynamic>?  departmentData6;
   Map<String, dynamic>?  departmentData7;
-  String? mei,loc,locNa,date2;
+  String? mei,loc,locNa,date2,loc1,locNa1;
 
-   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa,this.date2});
+   HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa,this.date2,
+   this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1,this.locNa1,
+   });
   @override
   State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
 }
 
 class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with ChangeNotifier {
   bool? isLoading;
+  PageController _pageController = PageController();
+ValueNotifier<int> currentPage = ValueNotifier<int>(0);
   //bool _isCalendarEnabled = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
@@ -154,7 +158,7 @@ void enableCalendar() {
                 top: 0,
                 left: 0,
                 right: 0, 
-                height: 170, // Adjust the height as needed
+                height: 210, // Adjust the height as needed
                 child: Container(
                   color: Color(0xFF110D5C), // Set the color of the section
                 ),
@@ -163,7 +167,7 @@ void enableCalendar() {
                 top: 15,
                 left: 0,
                 right: 0, 
-                //height: 150, // Adjust the height as needed
+                height: 70, // Adjust the height as needed
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -174,58 +178,69 @@ void enableCalendar() {
                            _scaffoldKey.currentState?.openDrawer();
                           }, icon: Icon(Icons.menu),iconSize: 30,color: Colors.white,),
                           Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Text(widget.locNa!,style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold),),
+                            padding: const EdgeInsets.only(left:0.0),
+                            child:ValueListenableBuilder<int>(
+  valueListenable: currentPage,
+  builder: (context, page, _) {
+    // Update text based on current page
+    return Text(page == 0 ? widget.locNa! : widget.locNa1!,maxLines: 2,
+  overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold));
+  },
+),
                           )
                         ],
                       ),
                       
-                      Row(
-                        children: [
-                          IconButton(onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return calender(context,isLoading);
-              },
-            );
-            // Disable the calendar icon for 10 seconds
-            // setState(() {
-            //   _isCalendarEnabled = false;
-            // });
-            //Timer(Duration(seconds: 10), enableCalendar); // Enable the calendar after 10 seconds
-          }
-         , icon: Icon(Icons.calendar_today,color: Colors.white ),),
-                          
-                          
-                          IconButton(onPressed: ()async{
-                           await api.loadCurrentSalesData(date: '05/03/2024',loca: "01",imei: "mei");
-                          }, icon: Icon(Icons.notifications,color: Colors.white,)),
-                          IconButton(onPressed: (){
-                            apiService.setIsLoading(true );
-                            Future.delayed(Duration(milliseconds: 100), () {
-      
-      //Provider.of<ApiService>(context, listen: false).addListener(() {
-      //Navigator.of(context).pop();
-      //isLoading = apiServic.isLoading;
-      print(isLoading);
-      if (apiServic.isLoading) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) {
-            return show();
-          },
-        );
-      } 
-      
-      //});
-      widget.onDateSelected!( date1);
-      
-      
-    });
-                          }, icon: Icon(Icons.refresh,color: Colors.white,)),
-                        ], 
+                      Padding(
+                        padding: const EdgeInsets.only(right:2.0),
+                        child: Row(
+                          children: [
+                            IconButton(onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return calender(context,isLoading);
+                                    },
+                                  );
+                                  // Disable the calendar icon for 10 seconds
+                                  // setState(() {
+                                  //   _isCalendarEnabled = false;
+                                  // });
+                                  //Timer(Duration(seconds: 10), enableCalendar); // Enable the calendar after 10 seconds
+                                }
+                               , icon: Icon(Icons.calendar_today,color: Colors.white ),),
+                            
+                            
+                            IconButton(onPressed: ()async{
+                             await api.loadCurrentSalesData(date: '05/03/2024',loca: "01",imei: "mei");
+                            }, icon: Icon(Icons.notifications,color: Colors.white,)),
+                            IconButton(onPressed: (){
+                              apiService.setIsLoading(true );
+                              Future.delayed(Duration(milliseconds: 100), () {
+                            
+                            //Provider.of<ApiService>(context, listen: false).addListener(() {
+                            //Navigator.of(context).pop();
+                            //isLoading = apiServic.isLoading;
+                            print(isLoading);
+                            if (apiServic.isLoading) {
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return show();
+                                },
+                              );
+                            } 
+                            
+                            //});
+                            widget.onDateSelected!( date1);
+                            
+                            
+                          });
+                            }, icon: Icon(Icons.refresh,color: Colors.white,)),
+                          ], 
+                        ),
                       ),
                     ],
                   ), // Set the color of the section
@@ -237,10 +252,15 @@ void enableCalendar() {
                 right: 0,
                 bottom: 0,
                 child: PageView(
-                  scrollDirection: Axis.horizontal, // Set the scrolling direction to horizontal
+                  scrollDirection: Axis.horizontal,
+                   physics: const ClampingScrollPhysics(),
+                   controller:_pageController,
+  onPageChanged: (int page) {
+    currentPage.value = page;
+  },// Set the scrolling direction to horizontal
                   children: [
                     Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
-                    Dashboard2(),
+                    Dashboard2(current: widget.curent,DepartmentData:widget.DepartmentData ,DepartmentData2: widget.DepartmentData2,DepartmentData3: widget.DepartmentData3,DepartmentData4: widget.DepartmentData4,DepartmentData5: widget.DepartmentData5,DepartmentData6: widget.DepartmentData6,DepartmentData1: widget.DepartmentData1,DepartmentData7: widget.DepartmentData7,selectedDay: widget.date2, ),
                   ],
                 ),
               ),

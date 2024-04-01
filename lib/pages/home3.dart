@@ -1494,43 +1494,43 @@ String monthName = DateFormat('MMM').format(DateTime.now());
   
   //@override
  
-  Future<void> _getImei( ) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    //if (Theme.of(context).platform == TargetPlatform.android) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      setState(() {
-        mei = androidInfo.androidId; 
-        });// Using androidId as an example, you might need to request permission to access the IMEI number.
-        print(mei);
-        await api.loadLocations(mei,date1);
-        loc=api.loca;
-        await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
-        setState(() {
+//   Future<void> _getImei( ) async {
+//     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+//     //if (Theme.of(context).platform == TargetPlatform.android) {
+//       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+//       setState(() {
+//         mei = androidInfo.androidId; 
+//         });// Using androidId as an example, you might need to request permission to access the IMEI number.
+//         print(mei);
+//         await api.loadLocations(mei,date1);
+//         loc=api.loca;
+//         await api.loadCurrentSalesData(date:date1,loca:loc,imei:mei);
+//         setState(() {
             
-          res = api.responseData;
-          print('res:${res}');
-          if(res != null && res.containsKey('CommonResult')) {
-  var commonResult = res['CommonResult'];
-  if (commonResult.containsKey('Table')) {
-     net = res['CommonResult']['Table'][0]['NetSales'];
-     cr = res['CommonResult']['Table'][0]['CashRefund'];
-     cs = res['CommonResult']['Table'][0]['CashSales'];
-     ds = res['CommonResult']['Table'][0]['Discount'];
-     cds = res['CommonResult']['Table'][0]['CreditSales'];
-     db = res['CommonResult']['Table'][0]['DBNAME'];
-  // print(data1['CommonResult']['Table'][0]['NetSales'].toString());
-    // Now you can safely access properties on the 'Table' object
-  } else {
-    print('Error: Table property not found');
-  }
-} else {
-  print('Error: CommonResult property not found');
-}
-        });
-        print('net:${net}');
-      //});
-  //}
-  }
+//           res = api.responseData;
+//           print('res:${res}');
+//           if(res != null && res.containsKey('CommonResult')) {
+//   var commonResult = res['CommonResult'];
+//   if (commonResult.containsKey('Table')) {
+//      net = res['CommonResult']['Table'][0]['NetSales'];
+//      cr = res['CommonResult']['Table'][0]['CashRefund'];
+//      cs = res['CommonResult']['Table'][0]['CashSales'];
+//      ds = res['CommonResult']['Table'][0]['Discount'];
+//      cds = res['CommonResult']['Table'][0]['CreditSales'];
+//      db = res['CommonResult']['Table'][0]['DBNAME'];
+//   // print(data1['CommonResult']['Table'][0]['NetSales'].toString());
+//     // Now you can safely access properties on the 'Table' object
+//   } else {
+//     print('Error: Table property not found');
+//   }
+// } else {
+//   print('Error: CommonResult property not found');
+// }
+//         });
+//         print('net:${net}');
+//       //});
+//   //}
+//   }
   Widget renderDepartment(Map<String, dynamic> item, int index) {
   NumberFormat formatter = NumberFormat('#,##0.0', 'en_US');
 

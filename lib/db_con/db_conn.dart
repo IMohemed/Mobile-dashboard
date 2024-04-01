@@ -16,7 +16,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApiService extends ChangeNotifier{
   APIRequestBuilder req =APIRequestBuilder();
   String? storedUrl;
-  String storedUrl1="api.salesup3.onimtaitsl.com";
+  List<dynamic> locs = [];
+      List<dynamic> names = [];
+ // String storedUrl1="api.salesup3.onimtaitsl.com";
 
  String url = '';
       var loca,locNa;
@@ -113,7 +115,7 @@ bool get isLoading => _isLoading;
 
   Future<void> postData() async {
     // Define the endpoint URL
-    String uri = 'http://onimtalive.com/api/merchant/settings';
+    String uri = 'https://onimtalive.com/api/merchant/settings';
 
     // Define the JSON data to be sent in the request
     Map<String, dynamic> requestData = {
@@ -183,7 +185,7 @@ Future<bool> doesUrlExist() async {
    Future<void> sendData() async {
   //   // Define the endpoint URL
      storedUrl = await getUrlFromSharedPreferences();
-    String link = 'http://${storedUrl1}/api/Sales/CommonExcuteDS';
+    String link = 'http://${storedUrl}/api/Sales/CommonExcuteDS';
 
     // Define the JSON data to be sent in the request
     Map<String, dynamic> requestData1 = {
@@ -381,7 +383,7 @@ Future<bool> doesUrlExist() async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -441,7 +443,7 @@ Future<bool> doesUrlExist() async {
       storedUrl = await getUrlFromSharedPreferences();
   try {
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -472,24 +474,27 @@ Future<bool> doesUrlExist() async {
     if (response.statusCode == 200) {
       var json = jsonDecode(response.body);
       print(json);
-      List<dynamic> names = [];
+      
       json['CommonResult']['Table'].forEach((element) {
-        names.add(element);
+        names.add(element['Loca']);
+        locs.add(element['Loca_name']);
       });
-      names.forEach((element) {
-   loca = element['Loca'];
-   locNa = element['Loca_name'];
-    // Accessing 'Loca' property using bracket notation
-  // Do something with loca
-});
+//       names.forEach((element) {
+//    loca = element['Loca'];
+//    locNa = element['Loca_name'];
+//     // Accessing 'Loca' property using bracket notation
+//   // Do something with loca
+// }
+// );
 
 // Alternatively, using for-in loop
-for (var element in names) {
-   loca = element['Loca']; // Accessing 'Loca' property using bracket notation
-  // Do something with loca
-}
+// for (var element in names) {
+//    loca = element['Loca']; // Accessing 'Loca' property using bracket notation
+//   // Do something with loca
+// }
       //var name =jsonDecode();
        print(loca);
+       
       // setState(() {
       //   names = names;
       // });
@@ -539,7 +544,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -673,7 +678,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -775,7 +780,7 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -882,7 +887,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -1019,7 +1024,7 @@ Future<void> LoadBucketData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -1151,7 +1156,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
@@ -1279,7 +1284,7 @@ Future<void> loadLastBillData({date,loca,imei}) async {
 
     // Making the HTTP POST request
     var response = await http.post(
-      Uri.parse('http://${storedUrl1}/api/Sales/CommonExcuteDS'),
+      Uri.parse('http://${storedUrl}/api/Sales/CommonExcuteDS'),
       headers: {
         'content-type': 'application/json',
         'cache-control': 'no-cache',
