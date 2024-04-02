@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
+import 'package:flutter_project/pages/custom.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/loc2.dart';
@@ -15,7 +16,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 class HorizontalSlidingDemo extends StatefulWidget  {
   //const HorizontalSlidingDemo({super.key});
-  Function(String)? onDateSelected;
+  Function(String)? onDateSelected,onDaySelected1;
 List<CurrentSale>? curent;
   Map<String, dynamic>?  departmentData,DepartmentData,DepartmentData1,DepartmentData2,DepartmentData3,DepartmentData4,DepartmentData5,DepartmentData6;
   Map<String, dynamic>?  departmentData1,DepartmentData7;
@@ -28,7 +29,7 @@ List<CurrentSale>? curent;
   String? mei,loc,locNa,date2,loc1,locNa1;
 
    HorizontalSlidingDemo( {this.curent,super.key,this.mei,this.loc, this.departmentData,this.departmentData2,this.departmentData3,this.departmentData4,this.departmentData5,this.departmentData6,this.departmentData7,this.departmentData1,this.onDateSelected,this.locNa,this.date2,
-   this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1,this.locNa1,
+   this.DepartmentData,this.DepartmentData2,this.DepartmentData3,this.DepartmentData4,this.DepartmentData5,this.DepartmentData6,this.DepartmentData7,this.DepartmentData1,this.locNa1,this.onDaySelected1,
    });
   @override
   State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
@@ -155,19 +156,20 @@ void enableCalendar() {
            Stack(
              children: [
               Positioned(
-                top: 0,
+                top: 10,
                 left: 0,
-                right: 0, 
-                height: 210, // Adjust the height as needed
+                right: 0,
+                //bottom: 10, 
+                height: 300, // Adjust the height as needed
                 child: Container(
                   color: Color(0xFF110D5C), // Set the color of the section
                 ),
               ),
               Positioned(
-                top: 15,
+                top: 20,
                 left: 0,
                 right: 0, 
-                height: 70, // Adjust the height as needed
+                 height: 50,// Adjust the height as needed
                 child: Container(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,9 +185,11 @@ void enableCalendar() {
   valueListenable: currentPage,
   builder: (context, page, _) {
     // Update text based on current page
-    return Text(page == 0 ? widget.locNa! : widget.locNa1!,maxLines: 2,
-  overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: Colors.white,fontSize: 15,fontWeight: FontWeight.bold));
+    return SizedBox(width: 140.0,
+      child: Text(page == 0 ? widget.locNa! : widget.locNa1!,maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+          style: TextStyle(color: Colors.white,fontSize: 17,fontWeight: FontWeight.bold)),
+    );
   },
 ),
                           )
@@ -234,7 +238,14 @@ void enableCalendar() {
                             } 
                             
                             //});
-                            widget.onDateSelected!( date1);
+                            ValueListenableBuilder<int>(
+  valueListenable: currentPage,
+  builder: (context, page, _) {
+    // Update text based on current page
+     page==0? widget.onDateSelected!(date1!):widget.onDaySelected1!(date1); 
+     return SizedBox.shrink();
+    }
+);
                             
                             
                           });
@@ -251,17 +262,19 @@ void enableCalendar() {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                child: PageView(
+                child: 
+                PageView( 
                   scrollDirection: Axis.horizontal,
-                   physics: const ClampingScrollPhysics(),
+                   physics: const AlwaysScrollableScrollPhysics(),
+                   
                    controller:_pageController,
   onPageChanged: (int page) {
     currentPage.value = page;
   },// Set the scrolling direction to horizontal
                   children: [
-                    Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
+                   Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
                     Dashboard2(current: widget.curent,DepartmentData:widget.DepartmentData ,DepartmentData2: widget.DepartmentData2,DepartmentData3: widget.DepartmentData3,DepartmentData4: widget.DepartmentData4,DepartmentData5: widget.DepartmentData5,DepartmentData6: widget.DepartmentData6,DepartmentData1: widget.DepartmentData1,DepartmentData7: widget.DepartmentData7,selectedDay: widget.date2, ),
-                  ],
+],
                 ),
               ),
              ],
@@ -333,7 +346,7 @@ void enableCalendar() {
       //_selectedDate = selectedDay;
       _selectedDay = date1;
       //_focusedDay=focusedDay;
-      _isSelected = true;
+      _isSelected = !isSameDay(selectedDay, now);
       // _isCalendarEnabled = false;
     });
   
@@ -379,7 +392,17 @@ void enableCalendar() {
     else null;
     
   //});
-  widget.onDateSelected!(_selectedDay!);
+  // ValueListenableBuilder<int>(
+  // valueListenable: currentPage,
+  // builder: (context, page, _) {
+  //   // Update text based on current page
+  //   // page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
+  //    return 
+     _pageController.page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
+
+    //}
+//);
+  
   
   
 });

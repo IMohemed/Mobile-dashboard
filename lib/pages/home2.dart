@@ -150,7 +150,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                       if(data3['CommonResult']['Table'][0]['ReturnMSGIMEI'] == "T")
                       {
                         _getImei(date1,); 
-                        
+                        //_getImei2(date1);
                         //Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo()),);
 
                        //}
@@ -305,7 +305,7 @@ Future<void> _getImei2(date ) async {
           DepartmentData6 = api.MonthlyData;
           DepartmentData7 = api.LastBillData;
           print('dep:${departmentData3}');
-          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc1,locNa1: locNa2,DepartmentData: DepartmentData,DepartmentData2: DepartmentData2,DepartmentData3: DepartmentData3,DepartmentData4: DepartmentData4,DepartmentData5: DepartmentData5,DepartmentData6: DepartmentData6,DepartmentData7: DepartmentData7,DepartmentData1: DepartmentData1,onDateSelected: _getImei,date2: date,
+          Navigator.push(context,MaterialPageRoute(builder: (context) => HorizontalSlidingDemo(curent: current,mei: mei,loc: loc1,locNa1: locNa2,DepartmentData: DepartmentData,DepartmentData2: DepartmentData2,DepartmentData3: DepartmentData3,DepartmentData4: DepartmentData4,DepartmentData5: DepartmentData5,DepartmentData6: DepartmentData6,DepartmentData7: DepartmentData7,DepartmentData1: DepartmentData1,onDateSelected: _getImei,onDaySelected1: _getImei2,date2: date,
           locNa: locNa,departmentData: departmentData,departmentData2: departmentData2,departmentData3: departmentData3,departmentData4: departmentData4,departmentData5: departmentData5,departmentData6: departmentData6,departmentData7: departmentData7,departmentData1: departmentData1
           )),);
            
