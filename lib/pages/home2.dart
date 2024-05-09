@@ -20,7 +20,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
-  bool isloading = false;
+  //bool isloading = false;
   ApiService api = ApiService();
   ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
   localDB local=localDB();
@@ -63,6 +63,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context) {
     
     TextEditingController password=TextEditingController();
+    
     return Scaffold(
       //backgroundColor:Colors.blue[400],
       body: Center(
@@ -111,8 +112,9 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                 SizedBox(height: 12.0),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-    primary: Color.fromARGB(255, 1, 44, 108), // Set button color here
-    minimumSize: Size(350, 50), // Set button size here
+    primary: Color.fromARGB(255, 1, 44, 108), 
+    // Set button color here
+   minimumSize: Size(MediaQuery.of(context).size.width , 50), // Set button size here
   ),
                   
                   onPressed: () async{
@@ -134,7 +136,15 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                      //print(imei);
                      //else
                      {
-                     await api.postData();
+                      DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    //if (Theme.of(context).platform == TargetPlatform.android) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      //if (!mounted) return;
+      setState(() {
+        
+        mei = androidInfo.androidId; 
+        });
+                     await api.postData(mei:mei);
                      data1= api.data;
                     // bool load = ;
                      
@@ -172,11 +182,11 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
                   
                 ),
                 SizedBox(height: 36,),
-  //             Consumer<ApiService>(
-  // builder: (context, apiService, _) {
+              Consumer<ApiService>(
+  builder: (BuildContext context, apiService, _) {
     
- Builder(
-  builder: (BuildContext context) {
+//  Builder(
+//   builder: (BuildContext context) {
     bool isLoading = apiService.isLoading;
     return Container(
       //color: Colors.black,
@@ -204,7 +214,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
           : Container(), // Replace YourWidget() with your actual widget
     );
   },
-),
+)
 //   },
 // ),
               ],
@@ -229,7 +239,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin{
         print(mei);
         await api.loadLocations(mei,date);
         loc=api.names[0];
-        locNa=api.locs[0 ];
+        locNa=api.locs[0];
         // loc1 = loc?.replaceAll(RegExp(r'[0-9]+'), (int.parse(loc!.replaceAll(RegExp(r'[^0-9]'), '')) + 1).toString());
         // List<String> locations = ['${loc}', '${loc1}'];
         await api.loadCurrentSalesData(date:date,loca:loc,imei:mei);

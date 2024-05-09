@@ -10,10 +10,11 @@ import 'package:flutter_project/pages/home3.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
- String? mac_id="4988b924cfe11070";
+ String mac_id="4988b924cfe11070";
 // String? url;
 
 class ApiService extends ChangeNotifier{
+  
   APIRequestBuilder req =APIRequestBuilder();
   String? storedUrl;
   List<dynamic> locs = [];
@@ -57,6 +58,7 @@ class ApiService extends ChangeNotifier{
   List<CurrentSale> currentSales = [];
  Map<String, dynamic> get departmentData => DepartmentData;
 bool _isLoading = false;
+
 bool get isLoading => _isLoading;
   void setIsLoading(bool value) {
     _isLoading = value;
@@ -113,7 +115,7 @@ bool get isLoading => _isLoading;
  Map<String, dynamic> data2 = {};
  Map<String, dynamic> responseData= {};
 
-  Future<void> postData() async {
+  Future<void> postData({mei}) async {
     // Define the endpoint URL
     String uri = 'https://onimtalive.com/api/merchant/settings';
 
@@ -154,6 +156,8 @@ bool get isLoading => _isLoading;
     } catch (e) {
       // An error occurred during the request, print the error
       print('Error: $e');
+      showAlert();
+      throw e;  
     }
     
   }
@@ -161,6 +165,7 @@ bool get isLoading => _isLoading;
   Future<String?> setUrlFromSharedPreferences({uri}) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setString('url',uri);
+  
 }
 
 Future<String?> deleteUrlFromSharedPreferences() async {
@@ -370,7 +375,7 @@ Future<bool> doesUrlExist() async {
       '',
       '',
       '',
-      '${imei}',
+      '${mac_id}',
       '',
       '',
       '',
@@ -461,7 +466,7 @@ Future<bool> doesUrlExist() async {
           '',
           '',
           '',
-          imei,
+          mac_id,
           '',
           '',
           '',
@@ -531,7 +536,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
       '',
       '',
       '',
-      '${imei}',
+      '${mac_id}',
       '',
       '',
       '',
@@ -590,7 +595,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
             'Amount': pie['Amount'],
             'Contibution': pie['Contibution'],
           });
-          //randomIndex+=1;
+          //i+=1;
           qty += pie['Qty'];
           total = pie['TotalAmount'];
 
@@ -615,7 +620,7 @@ Future<void> loadPieChartData({date,loca,imei}) async {
         // }
         PieChartData chartData = PieChartData(
   sections: piedata.map((data) {
-    int index = piedata.indexOf(data); // Get the index of the current data
+     int index = piedata.indexOf(data); // Get the index of the current data
     Color sectionColor = piedatalist[index]['DrawerColor'];
     return PieChartSectionData(
       color: sectionColor, // Assuming Material is a list of colors
@@ -665,7 +670,7 @@ Future<void> loadpaymentPieChartData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -767,7 +772,7 @@ Future<void> LoadUnitWiseData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -874,7 +879,7 @@ Future<void> loadHourlyData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -1011,7 +1016,7 @@ Future<void> LoadBucketData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -1143,7 +1148,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -1203,7 +1208,7 @@ Future<void> loadMonthlySalesData({date,loca,imei}) async {
     
     LineChartData BucketBillGraph = LineChartData(
   lineBarsData: [
-    LineChartBarData(
+    LineChartBarData( 
       spots: monthlylinechart.map((value) {
         return FlSpot(
           value['x'],
@@ -1271,7 +1276,7 @@ Future<void> loadLastBillData({date,loca,imei}) async {
       '',
       '',
       '',
-      imei,
+      mac_id,
       '',
       '',
       '',
@@ -1354,9 +1359,10 @@ void showAlert() {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              //final yourClassInstance = Provider.of<ApiService>(context,listen: false);
-//yourClassInstance.
-setIsLoading(false);
+              // final yourClassInstance = Provider.of<ApiService>(context,listen: false);
+              // yourClassInstance.
+              setIsLoading(false);
+
             },
             child: Text('Cancel'),
           ),

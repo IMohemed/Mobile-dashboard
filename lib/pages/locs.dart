@@ -6,6 +6,7 @@ import 'package:flutter_project/db_con/db_conn.dart';
 import 'package:flutter_project/main.dart';
 import 'package:flutter_project/model/current_sale.dart';
 import 'package:flutter_project/pages/custom.dart';
+import 'package:flutter_project/pages/get.dart';
 import 'package:flutter_project/pages/home2.dart';
 import 'package:flutter_project/pages/home3.dart';
 import 'package:flutter_project/pages/loc2.dart';
@@ -35,15 +36,17 @@ List<CurrentSale>? curent;
   State<HorizontalSlidingDemo> createState() => _HorizontalSlidingDemoState();
 }
 
-class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo> with ChangeNotifier {
-  bool? isLoading;
+class _HorizontalSlidingDemoState extends State<HorizontalSlidingDemo>  {
+  //bool? isLoading;
   PageController _pageController = PageController();
 ValueNotifier<int> currentPage = ValueNotifier<int>(0);
+ValueNotifier<DateTime> selectedDate = ValueNotifier<DateTime>(DateTime.now());
   //bool _isCalendarEnabled = true;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  ApiService apiService = Provider.of<ApiService>(navigatorKey.currentState!.context, listen: false);
+  ApiService apiService2 = Provider.of<ApiService>(navigatorKey.currentState!.context,listen: false);
    DateTime? _selectedday;
    DateTime? _focusedDay;
+   int active=0;
  late Timer _timer;
   String? _selectedDay;
   bool _isSelected = false;
@@ -55,6 +58,8 @@ String day = DateFormat('EEE').format(DateTime.now());
 String monthName = DateFormat('MMM').format(DateTime.now());
 String date1 = DateFormat('dd/MM/yyyy').format(DateTime.now());
 DateTime? _selectedDate;
+
+
 
 @override
 // void dispose() {
@@ -70,9 +75,15 @@ void enableCalendar() {
   @override
   Widget build(BuildContext context) {
     
-    return Consumer<ApiService>(
+    // return Consumer<ApiService>(
 
-      builder:(BuildContext context,ApiService apiServic, child){
+    //   builder:(BuildContext context,ApiService apiServic, child){
+      // List<Widget> pages = [
+      //              Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
+      //              Dashboard2(current: widget.curent,DepartmentData:widget.DepartmentData ,DepartmentData2: widget.DepartmentData2,DepartmentData3: widget.DepartmentData3,DepartmentData4: widget.DepartmentData4,DepartmentData5: widget.DepartmentData5,DepartmentData6: widget.DepartmentData6,DepartmentData1: widget.DepartmentData1,DepartmentData7: widget.DepartmentData7,selectedDay: widget.date2, ),
+
+      // ];
+      bool isLoading = context.watch<ApiService>().isLoading;
       return WillPopScope(
         onWillPop: ()async {
           
@@ -156,7 +167,7 @@ void enableCalendar() {
            Stack(
              children: [
               Positioned(
-                top: 10,
+                top: 0,
                 left: 0,
                 right: 0,
                 //bottom: 10, 
@@ -182,7 +193,7 @@ void enableCalendar() {
                           Padding(
                             padding: const EdgeInsets.only(left:0.0),
                             child:ValueListenableBuilder<int>(
-  valueListenable: currentPage,
+  valueListenable: currentPage ?? ValueNotifier<int>(0),
   builder: (context, page, _) {
     // Update text based on current page
     return SizedBox(width: 140.0,
@@ -204,7 +215,7 @@ void enableCalendar() {
                                   showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return calender(context,isLoading);
+                                      return calender(context);
                                     },
                                   );
                                   // Disable the calendar icon for 10 seconds
@@ -217,25 +228,39 @@ void enableCalendar() {
                             
                             
                             IconButton(onPressed: ()async{
-                             await api.loadCurrentSalesData(date: '05/03/2024',loca: "01",imei: "mei");
+                             //await api.loadCurrentSalesData(date: '05/03/2024',loca: "01",imei: "mei");
+                             Message message= Message();
+                            await message.scheduleNotification();
                             }, icon: Icon(Icons.notifications,color: Colors.white,)),
-                            IconButton(onPressed: (){
-                              apiService.setIsLoading(true );
+                             IconButton(onPressed: (){
+                              widget.onDateSelected!(date1);
+                              apiService2.setIsLoading(true );
                               Future.delayed(Duration(milliseconds: 100), () {
                             
                             //Provider.of<ApiService>(context, listen: false).addListener(() {
                             //Navigator.of(context).pop();
                             //isLoading = apiServic.isLoading;
-                            print(isLoading);
-                            if (apiServic.isLoading) {
-                              showDialog(
-                                context: context,
-                                barrierDismissible: false,
-                                builder: (BuildContext context) {
-                                  return show();
-                                },
-                              );
-                            } 
+
+                            //print('load ${isLoading}');
+                            // Consumer<ApiService>(
+                            //builder: (context, apiService, _) {
+    bool isLoading = context.read<ApiService>().isLoading;
+    if (isLoading) {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return show(context); // Assuming show() returns a Widget
+        },
+      );
+    }
+    else {
+  // Dismiss the dialog if it's currently open
+  Navigator.of(context).pop();
+}
+    //return Container(); // Return a Container as an alternative when not loading
+//   },
+// );
                             
                             //});
                             ValueListenableBuilder<int>(
@@ -264,13 +289,18 @@ void enableCalendar() {
                 bottom: 0,
                 child: 
                 PageView( 
-                  scrollDirection: Axis.horizontal,
+                   //scrollDirection: Axis.horizontal,
                    physics: const AlwaysScrollableScrollPhysics(),
-                   
+                  //  itemBuilder: (BuildContext context,int index){
+                  //   return pages[index % pages.length];
+                  //  },
                    controller:_pageController,
   onPageChanged: (int page) {
     currentPage.value = page;
-  },// Set the scrolling direction to horizontal
+    // setState(() {  
+    //   active=page;
+    // });
+  },// Set the scrolling dir ection to horizontal
                   children: [
                    Dashboard(current: widget.curent,DepartmentData:widget.departmentData ,DepartmentData2: widget.departmentData2,DepartmentData3: widget.departmentData3,DepartmentData4: widget.departmentData4,DepartmentData5: widget.departmentData5,DepartmentData6: widget.departmentData6,DepartmentData1: widget.departmentData1,DepartmentData7: widget.departmentData7,selectedDay: widget.date2,),
                     Dashboard2(current: widget.curent,DepartmentData:widget.DepartmentData ,DepartmentData2: widget.DepartmentData2,DepartmentData3: widget.DepartmentData3,DepartmentData4: widget.DepartmentData4,DepartmentData5: widget.DepartmentData5,DepartmentData6: widget.DepartmentData6,DepartmentData1: widget.DepartmentData1,DepartmentData7: widget.DepartmentData7,selectedDay: widget.date2, ),
@@ -280,146 +310,214 @@ void enableCalendar() {
              ],
            ),
         ),
-      );}
-    //),
-    );
+      ); 
+    //   }
+    // //),
+    // );
   }
-   Widget calender (context,isloading) {
+   Widget calender (BuildContext context) {
     //bool isLoading = Provider.of<ApiService>(context).isLoading;
-    return AlertDialog(
-      //titlePadding: EdgeInsets.all(0),
-      title: Container(
-        
-        // color: Colors.blue,
-        child: Column(
-          
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(year.toString()),
-            Row(
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      // child: Container(
+      //   width: 300, // Set the desired width
+      //     height: 300,
+        child: AlertDialog(
+          titlePadding: EdgeInsets.all(0),
+          title: Container(
+          //   width: 300, // Set the desired width
+          // height: 300,
+            //constraints: BoxConstraints(minWidth: 200, maxWidth: 300),
+            // color: Colors.blue,
+            child: Column(
+              
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${day}, '),
-                Text('${monthName} '),
-                Text(date.toString())
+                Text(year.toString()),
+                Row(
+                  children: [
+                    Text('${day}, '),
+                    Text('${monthName} '),
+                    Text(date.toString())
+                  ],
+                ),
               ],
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ValueListenableBuilder<DateTime>(
+              valueListenable: selectedDate,
+        builder: (context, selectedDateValue, child) {
+              return TableCalendar(
+                firstDay: DateTime.utc(2010, 10, 16),
+                focusedDay: now,
+                lastDay: DateTime.utc(2030, 3, 14),
+                calendarFormat: CalendarFormat.month,
+                rowHeight: 35,
+                headerStyle: HeaderStyle(
+                  titleCentered: true,
+                  titleTextStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),
+                  formatButtonVisible: false,
+                ),
+                calendarStyle: CalendarStyle(
+                  selectedDecoration: BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  todayDecoration: BoxDecoration(
+                    color: Colors.green,
+                    shape: BoxShape.circle,
+                  ),
+                  defaultTextStyle: TextStyle(color: Colors.black),
+                  weekendTextStyle: TextStyle(color: Colors.red),
+                ),
+                daysOfWeekStyle: DaysOfWeekStyle(
+                  weekendStyle: TextStyle(color: Colors.red),
+                ),
+                availableGestures: AvailableGestures.all,
+                selectedDayPredicate: (day) {
+              return isSameDay(day, selectedDate.value);
+                  },
+                onDaySelected: (selectedDay, focusedDay) {
+               //        if (selectedDay == focusedDay) {
+                String date1 = DateFormat('dd/MM/yyyy').format(selectedDay);
+            
+                setState(() {
+                  now = selectedDay;
+                  //_selectedDate = selectedDay;
+                  selectedDate.value = selectedDay;
+                  _selectedDay = date1;
+                  //_focusedDay=focusedDay;
+                  _isSelected = true;
+                  // _isCalendarEnabled = false;
+                });
+                if (!isSameDay(selectedDay, now)) {
+                setState(() {
+                  _isSelected = false; // Set to false for other dates
+                });
+              }
+                 
+            
+            
+                print(_selectedDay);
+            
+                
+            
+               //}
+               },
+              );}
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                apiService2.setIsLoading(true );
+            
+        
+        
+         // Future.delayed(Duration.zero, () {
+        
+        //Provider.of<ApiService>(context, listen: false).addListener(() {
+        widget.onDateSelected!(_selectedDay!);
+        Navigator.of(context).pop();
+        //bool isLoading = apiService .isLoading;
+         
+          //      Consumer<ApiService>( 
+          //   builder: (context, apiService, _) {
+          //      bool isLoading = apiService2.isLoading;
+          //      print('load ${isLoading}');
+          //     if (isLoading) {
+          //       showDialog(
+          //         context: context,
+          //         barrierDismissible: false,
+          //         builder: (BuildContext context) {
+          //           return show(context); // Assuming show() returns a Widget
+          //         },
+          //       );
+          //     }
+          //     else {
+          //   // Dismiss the dialog if it's currently open
+        
+          //   return Container();
+          // }
+          //      // Return a Container as an alternative when not loading
+          //   },
+          // );
+        
+          //     Consumer<ApiService>(
+          //   builder: (context, apiServic, _) {
+          //     bool isLoading = apiServic.isLoading;
+          
+          //     print('load ${isLoading}');
+        
+          //     // Return the dialog or an empty Container based on isLoading
+          //      showLoadingDialog(BuildContext context) {
+          //   showDialog(
+          //     context: context,
+          //     barrierDismissible: false, // Prevent dismissal by tapping outside
+          //     builder: (BuildContext context) {
+          //           return show(context); // Assuming show() returns a Widget
+          //         },
+          //   );
+          // }
+          // return isLoading ? Container(child:showLoadingDialog(context)) : Container(); // Replace Container with your desired widget
+          //   },
+          // );
+          
+          bool isLoading = context.read<ApiService>().isLoading ;
+        if (isLoading) {
+          showDialog(                                               
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return show(context); // Assuming show() returns a Widget
+            },  
+          ); 
+        }
+        // else {
+        // // Dismiss the dialog if it's currently open
+        // Navigator.of(context).pop();
+        //   }
+          
+          
+        //});
+        // ValueListenableBuilder<int>(
+        // valueListenable: currentPage,
+        // builder: (context, page, _) {
+        //   // Update text based on current page
+        //   // page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
+        //    return 
+         _pageController.page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
+          
+        //}
+          //);
+        
+        
+        
+          // }
+          // );
+               // Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('ok'),
             ),
           ],
         ),
-      ),
-      content: SingleChildScrollView(
-        child: TableCalendar(
-          firstDay: DateTime.utc(2010, 10, 16),
-          focusedDay: now,
-          lastDay: DateTime.utc(2030, 3, 14),
-          calendarFormat: CalendarFormat.month,
-          rowHeight: 35,
-          headerStyle: HeaderStyle(
-            titleCentered: true,
-            titleTextStyle: TextStyle(fontSize: 14,fontWeight: FontWeight.bold),
-            formatButtonVisible: false,
-          ),
-          calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
-              color: _isSelected?Colors.blue:Colors.transparent,
-              shape: BoxShape.circle,
-            ),
-            todayDecoration: BoxDecoration(
-              color: Colors.green,
-              shape: BoxShape.circle,
-            ),
-            defaultTextStyle: TextStyle(color: Colors.black),
-            weekendTextStyle: TextStyle(color: Colors.red),
-          ),
-          daysOfWeekStyle: DaysOfWeekStyle(
-            weekendStyle: TextStyle(color: Colors.red),
-          ),
-          availableGestures: AvailableGestures.all,
-          selectedDayPredicate: (day) {
-        return isSameDay(day, now);
-      },
-          onDaySelected: (selectedDay, focusedDay) {
-   //        if (selectedDay == focusedDay) {
-    String date1 = DateFormat('dd/MM/yyyy').format(selectedDay);
-
-    setState(() {
-      now = selectedDay;
-      //_selectedDate = selectedDay;
-      _selectedDay = date1;
-      //_focusedDay=focusedDay;
-      _isSelected = !isSameDay(selectedDay, now);
-      // _isCalendarEnabled = false;
-    });
-  
-           
-
-
-    print(_selectedDay);
-
-    
-
-   //}
-   },
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop(); // Close the dialog
-          },
-          child: Text('Close'),
-        ),
-        TextButton(
-          onPressed: () {
-            apiService.setIsLoading(true );
-        
-    
-    
-    Future.delayed(Duration.zero, () {
-  
-  //Provider.of<ApiService>(context, listen: false).addListener(() {
-    Navigator.of(context).pop();
-    bool isLoading2 = apiService .isLoading;
-    print(isLoading);
-    if (isLoading2!) {
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) { 
-          return show();
-        },
-      );
-    }
-    else null;
-    
-  //});
-  // ValueListenableBuilder<int>(
-  // valueListenable: currentPage,
-  // builder: (context, page, _) {
-  //   // Update text based on current page
-  //   // page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
-  //    return 
-     _pageController.page==0? widget.onDateSelected!(_selectedDay!):widget.onDaySelected1!(_selectedDay!); 
-
-    //}
-//);
-  
-  
-  
-});
-           // Navigator.of(context).pop(); // Close the dialog
-          },
-          child: Text('ok'),
-        ),
-      ],
+      //),
     );
   }
-   Widget show( ) {
-  return WillPopScope(
-     onWillPop: ()async {
+   Widget show(BuildContext context) {
+  return Container(
+    //  onWillPop: ()async {
         
-        SystemNavigator.pop();
-        return false;
-      },
+    //     SystemNavigator.pop();
+    //     return false;
+    //   },
     child: Dialog(
       backgroundColor: Color.fromARGB(0, 197, 73, 73), // Make dialog background transparent
       child: Card(

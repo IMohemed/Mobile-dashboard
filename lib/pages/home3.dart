@@ -389,7 +389,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                             
                                             child: DataTable(
                                               dataRowHeight: 30,
-                                              columnSpacing: 25.0,
+                                              columnSpacing: MediaQuery.of(context).size.width*0.07,
                                               horizontalMargin: 0,
                                         columns: [
                                           DataColumn(label: Text('Department',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16))),
@@ -534,7 +534,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
           child: Container(
             child: DataTable(
               dataRowHeight: 30,
-              columnSpacing: 55.0,
+              columnSpacing: MediaQuery.of(context).size.width*0.15,
               horizontalMargin: 0,
               columns: [
                 DataColumn(
@@ -587,7 +587,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                     ],
                   )),
                   DataCell(Text(value.toStringAsFixed(1),textAlign: TextAlign.right)),
-                  DataCell(SizedBox(width: 70,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
+                  DataCell(SizedBox(width: MediaQuery.of(context).size.width*0.2,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                 ]);
               }).toList(),
             ),
@@ -694,7 +694,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
           padding: const EdgeInsets.all(8.0),
           child: Container(
             child: DataTable(
-              columnSpacing: 70.0,
+              columnSpacing: MediaQuery.of(context).size.width*0.24,
               dataRowHeight: 30,
               horizontalMargin: 0,
               columns: [
@@ -743,7 +743,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                               ),
                     ),
                     DataCell(Text(value.toStringAsFixed(2))),
-                    DataCell(SizedBox(width: 75,child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
+                    DataCell(SizedBox(child: Text(NumberFormat("#,##0.00").format(_number).toString(),textAlign: TextAlign.right))),
                   ],
                 );
               }).toList(),
@@ -882,12 +882,12 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            child: Container(
                                             
                                             child: DataTable(
-                                              columnSpacing: 6.0,
+                                              columnSpacing: MediaQuery.of(context).size.width*0.02,
                                               dataRowHeight: 30,
                                               horizontalMargin: 0,
                                            columns: [
-                                             DataColumn(label: Center(child: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
-                                             DataColumn(label: SizedBox(width: 50,child: Padding(
+                                             DataColumn(label: Center(child: SizedBox(child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
+                                             DataColumn(label: SizedBox(child: Padding(
                                                padding: const EdgeInsets.only(top:8.0),
                                                child: Column(
                                                  children: [
@@ -920,13 +920,13 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            ),
                                                    ),
                                                    SizedBox(width: 5),
-                                                   SizedBox(width: 135,child: Text(key,style: TextStyle(fontSize: 14))),
+                                                   SizedBox(child: Text(key,style: TextStyle(fontSize: 14))),
                                                    // Adjust the width as needed
                                                  ],
                                                )),
                                                DataCell(Center(child: Text(value.toString()))),
                                                DataCell(Text(_number.toString())),
-                                               DataCell(SizedBox(width: 65,child: Text(NumberFormat("#,##0.00").format(_number1).toString(),textAlign: TextAlign.right,))),
+                                               DataCell(SizedBox(width:  MediaQuery.of(context).size.width*0.18,child: Text(NumberFormat("#,##0.00").format(_number1).toString(),textAlign: TextAlign.right,))),
                                              ]);
                                            }).toList(),
                                          ), ),
@@ -983,7 +983,7 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                                       child: Padding(
                                                         padding: const EdgeInsets.only(right:0.0),
                                                         child: Text(
-                                                          (widget.DepartmentData4?['totalhourlyqty']?? 0).toString() ,
+                                                          NumberFormat("#,##0").format(widget.DepartmentData4?['totalhourlyqty']?? 0).toString() ,
                                                           textAlign: TextAlign.right,
                                                           style: TextStyle(fontSize: 13),
                                                         ),
@@ -1074,11 +1074,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            child: Container(
                                             
                                             child: DataTable(
-                                              columnSpacing: 30.0,
+                                              columnSpacing: MediaQuery.of(context).size.width*0.13,
                                               dataRowHeight: 30,
                                               horizontalMargin: 0,
                                            columns: [
-                                             DataColumn(label: SizedBox(width: 80,child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)))),
+                                             DataColumn(label: SizedBox(child: Text('Hourly Range',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13)))),
                                             //  DataColumn(label: SizedBox(width: 50,child: Padding(
                                             //    padding: const EdgeInsets.only(top:8.0),
                                             //    child: Column(
@@ -1233,11 +1233,11 @@ String monthName = DateFormat('MMM').format(DateTime.now());
                                            child: Container(
                                             
                                             child: DataTable(
-                                              columnSpacing: 170.0,
+                                              columnSpacing: MediaQuery.of(context).size.width*0.55 ,
                                               dataRowHeight: 30,
                                               horizontalMargin: 0,
                                            columns: [
-                                             DataColumn(label: SizedBox(width: 80,child: Center(child: Text('Bill Date',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
+                                             DataColumn(label: SizedBox(width: MediaQuery.of(context).size.width*0.15,child: Center(child: Text('Bill Date',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 13))))),
                                             //  
                                              DataColumn(label: SizedBox(child: Text('Amount',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 12)))),
                                            ],
